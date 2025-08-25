@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Exp1_Sem2</string>
+    <string name="title_activity_registro">Registro</string>
+    <string name="title_activity_recuperar_password">RecuperarPassword</string>
+</resources>
