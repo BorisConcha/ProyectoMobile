@@ -173,12 +173,14 @@ fun RecuperarPasswordView(){
                     color = textPrimary,
                     lineHeight = 24.sp,
                     modifier = Modifier.semantics {
-                        contentDescription = "Instrucciones: Ingresa tu correo electrónico para recuperar tu contraseña"
+                        contentDescription =
+                            "Instrucciones: Ingresa tu correo electrónico para recuperar tu contraseña"
                     }
                 )
             }
         }
 
+        //Correo Electronico
         OutlinedTextField(
             value = correo,
             onValueChange = { correo = it },
@@ -230,6 +232,7 @@ fun RecuperarPasswordView(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        //Boton de enviar correo
         Button(
             onClick = {
                 cargando = true
@@ -245,7 +248,8 @@ fun RecuperarPasswordView(){
                 .fillMaxWidth()
                 .height(56.dp)
                 .semantics {
-                    contentDescription = "Botón para enviar solicitud de recuperación de contraseña al correo ingresado"
+                    contentDescription =
+                        "Botón para enviar solicitud de recuperación de contraseña al correo ingresado"
                     role = Role.Button
                 },
             colors = ButtonDefaults.buttonColors(
@@ -348,6 +352,7 @@ fun RecuperarPasswordView(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        //Boton de regresar al login
         TextButton(
             onClick = {
                 val intent = Intent(context, MainActivity::class.java)
@@ -381,6 +386,7 @@ fun RecuperarPasswordView(){
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        //Mensaje de ayuda adicional
         Card(
             modifier = Modifier
                 .fillMaxWidth()

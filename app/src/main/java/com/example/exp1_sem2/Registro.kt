@@ -88,6 +88,7 @@ class Registro : ComponentActivity() {
 @Composable
 fun RegistroView(){
 
+    //Variables formulario registro
     val context = LocalContext.current
     var nombreUsuario by remember { mutableStateOf("")}
     var nombre by remember { mutableStateOf("")}
@@ -98,6 +99,7 @@ fun RegistroView(){
     var cargando by remember { mutableStateOf(false) }
     var mensajeValidacion by remember { mutableStateOf("") }
 
+    //Colores formulario registro
     val primaryBlue = Color(0xFF1565C0)
     val backgroundColor = Color(0xFFF8F9FA)
     val surfaceColor = Color(0xFFFFFFFF)
@@ -118,6 +120,7 @@ fun RegistroView(){
             Spacer(modifier = Modifier.height(16.dp))
         }
 
+        //Icono del titulo
         item {
             Icon(
                 imageVector = Icons.Default.Person,
@@ -131,6 +134,7 @@ fun RegistroView(){
             )
         }
 
+        //Titulo
         item {
             Text(
                 text = "Registro de Usuario",
@@ -180,6 +184,7 @@ fun RegistroView(){
             }
         }
 
+        //Nombre Usuario
         item {
             OutlinedTextField(
                 value = nombreUsuario,
@@ -220,6 +225,7 @@ fun RegistroView(){
             )
         }
 
+        //Nombre
         item {
             OutlinedTextField(
                 value = nombre,
@@ -264,6 +270,7 @@ fun RegistroView(){
             )
         }
 
+        //Apellido paterno
         item {
             OutlinedTextField(
                 value = apellidoP,
@@ -307,6 +314,7 @@ fun RegistroView(){
             )
         }
 
+        //Apellido materno
         item {
             OutlinedTextField(
                 value = apellidoM,
@@ -350,6 +358,7 @@ fun RegistroView(){
             )
         }
 
+        //Correo
         item {
             OutlinedTextField(
                 value = correo,
@@ -393,6 +402,7 @@ fun RegistroView(){
             )
         }
 
+        //Contraseña
         item {
             OutlinedTextField(
                 value = password,
@@ -472,6 +482,7 @@ fun RegistroView(){
             }
         }
 
+        //Boton agregar usuario
         item {
             Button(
                 onClick = {
@@ -569,6 +580,7 @@ fun RegistroView(){
             }
         }
 
+        //Boton volver al login
         item {
             TextButton(
                 onClick = {

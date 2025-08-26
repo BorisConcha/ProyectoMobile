@@ -78,12 +78,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Login(){
 
+    //Variables genericas de la vista
     val context = LocalContext.current
     var username by remember { mutableStateOf("")}
     var password by remember { mutableStateOf("")}
     var mensajeLogin by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
+    //Colores
     val primaryBlue = Color(0xFF1565C0)
     val backgroundColor = Color(0xFFF8F9FA)
     val surfaceColor = Color(0xFFFFFFFF)
@@ -105,6 +107,7 @@ fun Login(){
         val animacion by animateLottieCompositionAsState(image,
             iterations = LottieConstants.IterateForever)
 
+        //animacion
         LottieAnimation(
             composition = image,
             progress = {animacion},
@@ -131,7 +134,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Campo de Usuario
+        //Usuario
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
@@ -172,7 +175,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Campo de Contraseña
+        //Contraseña
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
@@ -291,7 +294,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Enlaces de navegación
+        //Boton recuperar contraseña
         TextButton(
             onClick = {
                 val intent = Intent(context, RecuperarPassword::class.java)
@@ -313,6 +316,7 @@ fun Login(){
 
         Spacer(modifier = Modifier.height(8.dp))
 
+        //Boton registrarse
         TextButton(
             onClick = {
                 val intent = Intent(context, Registro::class.java)
