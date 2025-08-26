@@ -5,9 +5,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,12 +18,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -33,15 +34,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,14 +84,24 @@ fun Login(){
     var mensajeLogin by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
+    val primaryBlue = Color(0xFF1565C0)
+    val backgroundColor = Color(0xFFF8F9FA)
+    val surfaceColor = Color(0xFFFFFFFF)
+    val textPrimary = Color(0xFF212121)
+    val textSecondary = Color(0xFF616161)
+    val errorColor = Color(0xFFD32F2F)
+    val successColor = Color(0xFF388E3C)
 
     Column(
-        modifier = Modifier.fillMaxSize().padding( horizontal = 32.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        val image by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.readingboy))
+        val image by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.dog))
         val animacion by animateLottieCompositionAsState(image,
             iterations = LottieConstants.IterateForever)
 
@@ -98,71 +110,111 @@ fun Login(){
             progress = {animacion},
             modifier = Modifier
                 .fillMaxWidth()
-                .height(380.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Inicia sesion para continuar",
-            fontSize = 14.sp,
-            color = Color.DarkGray
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
-        OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
-            placeholder = {
-                Text("Nombre de Usuario",
-                    color = Color.Gray,
-                    style = TextStyle(textAlign = TextAlign.Center),
-                    modifier = Modifier.fillMaxWidth())
-            },
-            modifier = Modifier.fillMaxWidth()
-                .height(54.dp)
-                .background(Color(0xFFE6E3D8), shape = RoundedCornerShape(4.dp)),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF0A0801),
-                unfocusedTextColor = Color(0xFF0A0801),
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = Color.Black
-            ),
-            shape = RoundedCornerShape(4.dp),
-            singleLine = true
+                .height(300.dp)
+                .semantics {
+                    contentDescription = "Animación de una persona leyendo"
+                }
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        Text(
+            text = "Inicia sesión para continuar",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Medium,
+            color = textPrimary,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.semantics {
+                contentDescription = "Inicia sesión para continuar usando la aplicación"
+            }
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        // Campo de Usuario
+        OutlinedTextField(
+            value = username,
+            onValueChange = { username = it },
+            label = {
+                Text(
+                    "Nombre de Usuario",
+                    color = textSecondary,
+                    fontSize = 16.sp
+                )
+            },
+            placeholder = {
+                Text(
+                    "Ingresa tu usuario",
+                    color = textSecondary.copy(alpha = 0.7f)
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .semantics {
+                    contentDescription = "Campo para ingresar nombre de usuario"
+                },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = primaryBlue,
+                unfocusedBorderColor = textSecondary,
+                focusedTextColor = textPrimary,
+                unfocusedTextColor = textPrimary,
+                focusedContainerColor = surfaceColor,
+                unfocusedContainerColor = surfaceColor,
+                cursorColor = primaryBlue,
+                focusedLabelColor = primaryBlue,
+                unfocusedLabelColor = textSecondary
+            ),
+            shape = RoundedCornerShape(8.dp),
+            singleLine = true,
+            textStyle = TextStyle(fontSize = 16.sp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Campo de Contraseña
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = {
-                Text("Contraseña",
-                    color = Color.Gray,
-                    style = TextStyle(textAlign = TextAlign.Center),
-                    modifier = Modifier.fillMaxWidth())
+            label = {
+                Text(
+                    "Contraseña",
+                    color = textSecondary,
+                    fontSize = 16.sp
+                )
             },
-            modifier = Modifier.fillMaxWidth()
-                .height(54.dp)
-                .background(Color(0xFFE6E3D8), shape = RoundedCornerShape(4.dp)),
+            placeholder = {
+                Text(
+                    "Ingresa tu contraseña",
+                    color = textSecondary.copy(alpha = 0.7f)
+                )
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .semantics {
+                    contentDescription = "Campo para ingresar contraseña"
+                },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF0A0801),
-                unfocusedTextColor = Color(0xFF0A0801),
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                cursorColor = Color.Black
+                focusedBorderColor = primaryBlue,
+                unfocusedBorderColor = textSecondary,
+                focusedTextColor = textPrimary,
+                unfocusedTextColor = textPrimary,
+                focusedContainerColor = surfaceColor,
+                unfocusedContainerColor = surfaceColor,
+                cursorColor = primaryBlue,
+                focusedLabelColor = primaryBlue,
+                unfocusedLabelColor = textSecondary
             ),
-            shape = RoundedCornerShape(4.dp),
+            shape = RoundedCornerShape(8.dp),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            textStyle = TextStyle(fontSize = 16.sp)
         )
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
+        // Botón de Login
         Button(
             onClick = {
                 cargando = true
@@ -173,57 +225,113 @@ fun Login(){
                 }
                 cargando = false
             },
-            modifier = Modifier.fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFCC10C)),
-            shape = RoundedCornerShape(4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .semantics {
+                    contentDescription = "Botón para iniciar sesión con nombre de usuario y contraseña"
+                    role = Role.Button
+                },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = primaryBlue,
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(8.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
         ) {
-            Text("Iniciar Sesion", fontSize = 16.sp, color = Color.White)
+            if (cargando) {
+                CircularProgressIndicator(
+                    color = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+            } else {
+                Text(
+                    "Iniciar Sesión",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color.White
+                )
+            }
         }
 
+        // Mensaje de resultado
         if (mensajeLogin.isNotEmpty()) {
-            Text(
-                text = mensajeLogin,
-                color = if (mensajeLogin.contains("exitoso"))
-                    MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.error,
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Card(
                 modifier = Modifier
-                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp)
                     .semantics {
-                        contentDescription = "Mensaje de resultado: $mensajeLogin"
-                    }
+                        contentDescription = "Mensaje de resultado del inicio de sesión: $mensajeLogin"
+                    },
+                colors = CardDefaults.cardColors(
+                    containerColor = if (mensajeLogin.contains("exitoso"))
+                        successColor.copy(alpha = 0.1f)
+                    else
+                        errorColor.copy(alpha = 0.1f)
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    if (mensajeLogin.contains("exitoso")) successColor else errorColor
+                )
+            ) {
+                Text(
+                    text = mensajeLogin,
+                    color = if (mensajeLogin.contains("exitoso")) successColor else errorColor,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Enlaces de navegación
+        TextButton(
+            onClick = {
+                val intent = Intent(context, RecuperarPassword::class.java)
+                context.startActivity(intent)
+            },
+            modifier = Modifier.semantics {
+                contentDescription = "Enlace para recuperar contraseña olvidada"
+                role = Role.Button
+            }
+        ) {
+            Text(
+                text = "¿Olvidaste tu contraseña?",
+                color = primaryBlue,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                textDecoration = TextDecoration.Underline
+            )
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextButton(
+            onClick = {
+                val intent = Intent(context, Registro::class.java)
+                context.startActivity(intent)
+            },
+            modifier = Modifier.semantics {
+                contentDescription = "Enlace para crear una cuenta nueva"
+                role = Role.Button
+            }
+        ) {
+            Text(
+                text = "¿No tienes cuenta? Regístrate",
+                color = primaryBlue,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                textDecoration = TextDecoration.Underline
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = "Recuperar Contraseña",
-            color = Color.Gray,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.clickable{
-
-                val intent = Intent(context, RecuperarPassword::class.java)
-                context.startActivity(intent)
-
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "Registrarse",
-            color = Color.Gray,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.clickable{
-
-                val intent = Intent(context, Registro::class.java)
-                context.startActivity(intent)
-            }
-        )
-
-
     }
 }
