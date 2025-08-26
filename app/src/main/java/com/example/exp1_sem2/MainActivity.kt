@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -35,6 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -76,6 +79,8 @@ fun Login(){
     val context = LocalContext.current
     var username by remember { mutableStateOf("")}
     var password by remember { mutableStateOf("")}
+    var mensajeLogin by remember { mutableStateOf("") }
+    var cargando by remember { mutableStateOf(false) }
 
 
     Column(
@@ -94,14 +99,6 @@ fun Login(){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(380.dp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "DUOC UC",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
         )
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -128,8 +125,8 @@ fun Login(){
                 .height(54.dp)
                 .background(Color(0xFFE6E3D8), shape = RoundedCornerShape(4.dp)),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFFFCC10C),
-                unfocusedTextColor = Color(0xFFFCC10C),
+                focusedBorderColor = Color(0xFF0A0801),
+                unfocusedTextColor = Color(0xFF0A0801),
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 cursorColor = Color.Black
@@ -153,8 +150,8 @@ fun Login(){
                 .height(54.dp)
                 .background(Color(0xFFE6E3D8), shape = RoundedCornerShape(4.dp)),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFFFCC10C),
-                unfocusedTextColor = Color(0xFFFCC10C),
+                focusedBorderColor = Color(0xFF0A0801),
+                unfocusedTextColor = Color(0xFF0A0801),
                 focusedContainerColor = Color.Transparent,
                 unfocusedContainerColor = Color.Transparent,
                 cursorColor = Color.Black
@@ -167,13 +164,35 @@ fun Login(){
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = {/*TODO*/},
+            onClick = {
+                cargando = true
+                if (UsuarioRepositorio.validarLogin(username, password)) {
+                    mensajeLogin = "Inicio de sesión exitoso"
+                } else {
+                    mensajeLogin = "Credenciales incorrectas"
+                }
+                cargando = false
+            },
             modifier = Modifier.fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFCC10C)),
             shape = RoundedCornerShape(4.dp)
         ) {
             Text("Iniciar Sesion", fontSize = 16.sp, color = Color.White)
+        }
+
+        if (mensajeLogin.isNotEmpty()) {
+            Text(
+                text = mensajeLogin,
+                color = if (mensajeLogin.contains("exitoso"))
+                    MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.error,
+                modifier = Modifier
+                    .padding(8.dp)
+                    .semantics {
+                        contentDescription = "Mensaje de resultado: $mensajeLogin"
+                    }
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -184,6 +203,9 @@ fun Login(){
             fontSize = 14.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier.clickable{
+
+                val intent = Intent(context, RecuperarPassword::class.java)
+                context.startActivity(intent)
 
             }
         )

@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,15 +18,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -43,7 +47,12 @@ class Registro : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Exp1_Sem2Theme {
-                RegistroView()
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = Color(0xFFE8E5DA)
+                ) {
+                    RegistroView()
+                }
             }
         }
     }
@@ -66,10 +75,17 @@ fun RegistroView(){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
+        Text(
+            text = "Registro de Usuario",
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(bottom = 32.dp),
+            textAlign = TextAlign.Center
+        )
 
         OutlinedTextField(
             value = nombreUsuario,
@@ -114,31 +130,55 @@ fun RegistroView(){
             visualTransformation = PasswordVisualTransformation()
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
         Button(
             onClick = {
+                if (nombreUsuario.isNotBlank() && nombre.isNotBlank() &&
+                    apellidoP.isNotBlank() && apellidoM.isNotBlank() &&
+                    correo.isNotBlank() && password.isNotBlank()) {
 
-                val nuevoUsuario = Usuarios(
-                    nombreUsuario,
-                    nombre,
-                    apellidoP,
-                    apellidoM,
-                    correo,
-                    password
-                )
+                    val nuevoUsuario = Usuarios(
+                        nombreUsuario,
+                        nombre,
+                        apellidoP,
+                        apellidoM,
+                        correo,
+                        password
+                    )
 
-                UsuarioRepositorio.agregarUsuario(nuevoUsuario)
+                    UsuarioRepositorio.agregarUsuario(nuevoUsuario)
 
-                Toast.makeText(context, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
 
-                val intent = Intent(context, MainActivity::class.java)
-                context.startActivity(intent)
+                    val intent = Intent(context, MainActivity::class.java)
+                    context.startActivity(intent)
+                } else {
+                    Toast.makeText(context, "Por favor completa todos los campos requeridos", Toast.LENGTH_SHORT).show()
+                }
+
             },
             modifier = Modifier.fillMaxWidth()
                 .height(48.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFCC10C)),
             shape = RoundedCornerShape(4.dp)
         ) {
-            Text("Registrar", fontSize = 16.sp, color = Color.White)
+            Text("Registrarse", fontSize = 16.sp, color = Color.White)
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Volver al login",
+            color = Color.Gray,
+            fontSize = 14.sp,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.clickable{
+
+                val intent = Intent(context, MainActivity::class.java)
+                context.startActivity(intent)
+
+            }
+        )
     }
 }
