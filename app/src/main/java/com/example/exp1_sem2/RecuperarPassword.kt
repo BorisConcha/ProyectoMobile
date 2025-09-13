@@ -96,19 +96,10 @@ fun RecuperarPasswordView(){
     var mensajeRecuperarPassword by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
-    val primaryBlue = Color(0xFF1565C0)
-    val backgroundColor = Color(0xFFF8F9FA)
-    val surfaceColor = Color(0xFFFFFFFF)
-    val textPrimary = Color(0xFF212121)
-    val textSecondary = Color(0xFF616161)
-    val errorColor = Color(0xFFD32F2F)
-    val successColor = Color(0xFF388E3C)
-    val infoBackgroundColor = Color(0xFFE3F2FD)
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(Color(0xFFF8F9FA))
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -118,7 +109,7 @@ fun RecuperarPasswordView(){
         Icon(
             imageVector = Icons.Default.Lock,
             contentDescription = "Icono de seguridad para recuperación de contraseña",
-            tint = primaryBlue,
+            tint = Color(0xFF1565C0),
             modifier = Modifier
                 .size(64.dp)
                 .padding(bottom = 16.dp)
@@ -130,7 +121,7 @@ fun RecuperarPasswordView(){
         Text(
             text = "Recuperar Contraseña",
             style = MaterialTheme.typography.headlineMedium.copy(
-                color = textPrimary,
+                color = Color(0xFF212121),
                 fontWeight = FontWeight.Bold
             ),
             modifier = Modifier
@@ -149,9 +140,9 @@ fun RecuperarPasswordView(){
                     contentDescription = "Información importante sobre el proceso de recuperación"
                 },
             colors = CardDefaults.cardColors(
-                containerColor = infoBackgroundColor
+                containerColor = Color(0xFFE3F2FD)
             ),
-            border = BorderStroke(1.dp, primaryBlue.copy(alpha = 0.3f)),
+            border = BorderStroke(1.dp, Color(0xFF1565C0).copy(alpha = 0.3f)),
             shape = RoundedCornerShape(12.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
@@ -162,7 +153,7 @@ fun RecuperarPasswordView(){
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = "Icono de información",
-                    tint = primaryBlue,
+                    tint = Color(0xFF1565C0),
                     modifier = Modifier
                         .padding(end = 12.dp, top = 2.dp)
                         .size(24.dp)
@@ -170,7 +161,7 @@ fun RecuperarPasswordView(){
                 Text(
                     text = "Te ayudaremos a recuperar el acceso a tu cuenta. Ingresa tu correo electrónico registrado para comenzar el proceso de recuperación de contraseña.",
                     fontSize = 16.sp,
-                    color = textPrimary,
+                    color = Color(0xFF212121),
                     lineHeight = 24.sp,
                     modifier = Modifier.semantics {
                         contentDescription =
@@ -187,21 +178,21 @@ fun RecuperarPasswordView(){
             label = {
                 Text(
                     "Correo Electrónico",
-                    color = textSecondary,
+                    color = Color(0xFF616161),
                     fontSize = 16.sp
                 )
             },
             placeholder = {
                 Text(
                     "ejemplo@correo.com",
-                    color = textSecondary.copy(alpha = 0.7f)
+                    color = Color(0xFF616161).copy(alpha = 0.7f)
                 )
             },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Email,
                     contentDescription = "Icono de correo electrónico",
-                    tint = if (correo.isEmpty()) textSecondary else primaryBlue
+                    tint = if (correo.isEmpty()) Color(0xFF616161) else Color(0xFF1565C0)
                 )
             },
             modifier = Modifier
@@ -211,15 +202,15 @@ fun RecuperarPasswordView(){
                     contentDescription = "Campo para ingresar tu correo electrónico registrado"
                 },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = primaryBlue,
-                unfocusedBorderColor = textSecondary,
-                focusedTextColor = textPrimary,
-                unfocusedTextColor = textPrimary,
-                focusedContainerColor = surfaceColor,
-                unfocusedContainerColor = surfaceColor,
-                cursorColor = primaryBlue,
-                focusedLabelColor = primaryBlue,
-                unfocusedLabelColor = textSecondary
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF616161),
+                focusedTextColor = Color(0xFF212121),
+                unfocusedTextColor = Color(0xFF212121),
+                focusedContainerColor = Color(0xFFFFFFFF),
+                unfocusedContainerColor = Color(0xFFFFFFFF),
+                cursorColor = Color(0xFF1565C0),
+                focusedLabelColor = Color(0xFF1565C0),
+                unfocusedLabelColor = Color(0xFF616161)
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -253,9 +244,9 @@ fun RecuperarPasswordView(){
                     role = Role.Button
                 },
             colors = ButtonDefaults.buttonColors(
-                containerColor = primaryBlue,
+                containerColor = Color(0xFF1565C0),
                 contentColor = Color.White,
-                disabledContainerColor = textSecondary.copy(alpha = 0.3f)
+                disabledContainerColor = Color(0xFF616161).copy(alpha = 0.3f)
             ),
             shape = RoundedCornerShape(8.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
@@ -311,13 +302,13 @@ fun RecuperarPasswordView(){
                     },
                 colors = CardDefaults.cardColors(
                     containerColor = if (mensajeRecuperarPassword.contains(":"))
-                        successColor.copy(alpha = 0.1f)
+                        Color(0xFF388E3C).copy(alpha = 0.1f)
                     else
-                        errorColor.copy(alpha = 0.1f)
+                        Color(0xFFD32F2F).copy(alpha = 0.1f)
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (mensajeRecuperarPassword.contains(":")) successColor else errorColor
+                    if (mensajeRecuperarPassword.contains(":")) Color(0xFF388E3C) else Color(0xFFD32F2F)
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
@@ -334,14 +325,14 @@ fun RecuperarPasswordView(){
                             "Icono de éxito"
                         else
                             "Icono de error",
-                        tint = if (mensajeRecuperarPassword.contains(":")) successColor else errorColor,
+                        tint = if (mensajeRecuperarPassword.contains(":")) Color(0xFF388E3C) else Color(0xFFD32F2F),
                         modifier = Modifier
                             .padding(end = 12.dp, top = 2.dp)
                             .size(24.dp)
                     )
                     Text(
                         text = mensajeRecuperarPassword,
-                        color = if (mensajeRecuperarPassword.contains(":")) successColor else errorColor,
+                        color = if (mensajeRecuperarPassword.contains(":")) Color(0xFF388E3C) else Color(0xFFD32F2F),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         lineHeight = 24.sp
@@ -370,13 +361,13 @@ fun RecuperarPasswordView(){
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Icono de regresar",
-                    tint = primaryBlue,
+                    tint = Color(0xFF1565C0),
                     modifier = Modifier.size(20.dp)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "Volver al Login",
-                    color = primaryBlue,
+                    color = Color(0xFF1565C0),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     textDecoration = TextDecoration.Underline
@@ -394,15 +385,15 @@ fun RecuperarPasswordView(){
                     contentDescription = "Información de ayuda adicional"
                 },
             colors = CardDefaults.cardColors(
-                containerColor = surfaceColor
+                containerColor = Color(0xFFFFFFFF)
             ),
-            border = BorderStroke(1.dp, textSecondary.copy(alpha = 0.2f)),
+            border = BorderStroke(1.dp, Color(0xFF616161).copy(alpha = 0.2f)),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(
                 text = "¿Tienes problemas? Contacta nuestro soporte técnico para obtener ayuda adicional.",
                 fontSize = 14.sp,
-                color = textSecondary,
+                color = Color(0xFF616161),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .padding(12.dp)

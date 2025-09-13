@@ -99,18 +99,11 @@ fun RegistroView(){
     var cargando by remember { mutableStateOf(false) }
     var mensajeValidacion by remember { mutableStateOf("") }
 
-    //Colores formulario registro
-    val primaryBlue = Color(0xFF1565C0)
-    val backgroundColor = Color(0xFFF8F9FA)
-    val surfaceColor = Color(0xFFFFFFFF)
-    val textPrimary = Color(0xFF212121)
-    val textSecondary = Color(0xFF616161)
-    val errorColor = Color(0xFFD32F2F)
 
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(Color(0xFFF8F9FA))
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -125,7 +118,7 @@ fun RegistroView(){
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Icono de registro de nuevo usuario",
-                tint = primaryBlue,
+                tint = Color(0xFF1565C0),
                 modifier = Modifier
                     .size(64.dp)
                     .semantics {
@@ -139,7 +132,7 @@ fun RegistroView(){
             Text(
                 text = "Registro de Usuario",
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    color = textPrimary,
+                    color = Color(0xFF212121),
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.semantics {
@@ -159,7 +152,7 @@ fun RegistroView(){
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFE3F2FD)
                 ),
-                border = BorderStroke(1.dp, primaryBlue.copy(alpha = 0.3f)),
+                border = BorderStroke(1.dp, Color(0xFF1565C0).copy(alpha = 0.3f)),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
@@ -169,7 +162,7 @@ fun RegistroView(){
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Icono de información",
-                        tint = primaryBlue,
+                        tint = Color(0xFF1565C0),
                         modifier = Modifier
                             .padding(end = 12.dp, top = 2.dp)
                             .size(24.dp)
@@ -177,7 +170,7 @@ fun RegistroView(){
                     Text(
                         text = "Completa todos los campos para crear tu cuenta. Asegúrate de usar un correo válido y una contraseña segura.",
                         fontSize = 16.sp,
-                        color = textPrimary,
+                        color = Color(0xFF212121),
                         lineHeight = 24.sp
                     )
                 }
@@ -192,14 +185,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Nombre de Usuario",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "usuario123",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -209,15 +202,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar nombre de usuario único"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -233,14 +226,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Nombre",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu nombre",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -250,15 +243,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar tu nombre"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -278,14 +271,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Apellido Paterno",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido paterno",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -295,15 +288,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar tu apellido paterno"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -322,14 +315,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Apellido Materno",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido materno",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -339,15 +332,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar tu apellido materno"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -366,14 +359,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Correo Electrónico",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "ejemplo@correo.com",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -383,15 +376,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar tu correo electrónico"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -410,14 +403,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Contraseña",
-                        color = textSecondary,
+                        color = Color(0xFF616161),
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Mínimo 6 caracteres",
-                        color = textSecondary.copy(alpha = 0.7f)
+                        color = Color(0xFF616161).copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -427,15 +420,15 @@ fun RegistroView(){
                         contentDescription = "Campo para crear tu contraseña"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = primaryBlue,
-                    unfocusedBorderColor = textSecondary,
-                    focusedTextColor = textPrimary,
-                    unfocusedTextColor = textPrimary,
-                    focusedContainerColor = surfaceColor,
-                    unfocusedContainerColor = surfaceColor,
-                    cursorColor = primaryBlue,
-                    focusedLabelColor = primaryBlue,
-                    unfocusedLabelColor = textSecondary
+                    focusedBorderColor = Color(0xFF1565C0),
+                    unfocusedBorderColor = Color(0xFF616161),
+                    focusedTextColor = Color(0xFF212121),
+                    unfocusedTextColor = Color(0xFF212121),
+                    focusedContainerColor = Color(0xFFFFFFFF),
+                    unfocusedContainerColor = Color(0xFFFFFFFF),
+                    cursorColor = Color(0xFF1565C0),
+                    focusedLabelColor = Color(0xFF1565C0),
+                    unfocusedLabelColor = Color(0xFF616161)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -453,9 +446,9 @@ fun RegistroView(){
                             contentDescription = "Mensaje de validación: $mensajeValidacion"
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = errorColor.copy(alpha = 0.1f)
+                        containerColor = Color(0xFFD32F2F).copy(alpha = 0.1f)
                     ),
-                    border = BorderStroke(1.dp, errorColor),
+                    border = BorderStroke(1.dp, Color(0xFFD32F2F)),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Row(
@@ -465,14 +458,14 @@ fun RegistroView(){
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = "Icono de advertencia",
-                            tint = errorColor,
+                            tint = Color(0xFFD32F2F),
                             modifier = Modifier
                                 .padding(end = 12.dp, top = 2.dp)
                                 .size(24.dp)
                         )
                         Text(
                             text = mensajeValidacion,
-                            color = errorColor,
+                            color = Color(0xFFD32F2F),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             lineHeight = 24.sp
@@ -532,9 +525,9 @@ fun RegistroView(){
                         role = Role.Button
                     },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = primaryBlue,
+                    containerColor = Color(0xFF1565C0),
                     contentColor = Color.White,
-                    disabledContainerColor = textSecondary.copy(alpha = 0.3f)
+                    disabledContainerColor = Color(0xFF616161).copy(alpha = 0.3f)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
@@ -598,13 +591,13 @@ fun RegistroView(){
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Icono de regresar",
-                        tint = primaryBlue,
+                        tint = Color(0xFF1565C0),
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "¿Ya tienes cuenta? Inicia Sesión",
-                        color = primaryBlue,
+                        color = Color(0xFF1565C0),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         textDecoration = TextDecoration.Underline

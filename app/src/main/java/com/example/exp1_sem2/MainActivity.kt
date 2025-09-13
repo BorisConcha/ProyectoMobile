@@ -85,19 +85,11 @@ fun Login(){
     var mensajeLogin by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
 
-    //Colores
-    val primaryBlue = Color(0xFF1565C0)
-    val backgroundColor = Color(0xFFF8F9FA)
-    val surfaceColor = Color(0xFFFFFFFF)
-    val textPrimary = Color(0xFF212121)
-    val textSecondary = Color(0xFF616161)
-    val errorColor = Color(0xFFD32F2F)
-    val successColor = Color(0xFF388E3C)
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(backgroundColor)
+            .background(Color(0xFFF8F9FA))
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -125,7 +117,7 @@ fun Login(){
             text = "Inicia sesión para continuar",
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
-            color = textPrimary,
+            color = Color(0xFF212121),
             textAlign = TextAlign.Center,
             modifier = Modifier.semantics {
                 contentDescription = "Inicia sesión para continuar usando la aplicación"
@@ -141,14 +133,14 @@ fun Login(){
             label = {
                 Text(
                     "Nombre de Usuario",
-                    color = textSecondary,
+                    color = Color(0xFF616161),
                     fontSize = 16.sp
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu usuario",
-                    color = textSecondary.copy(alpha = 0.7f)
+                    color = Color(0xFF616161).copy(alpha = 0.7f)
                 )
             },
             modifier = Modifier
@@ -158,15 +150,15 @@ fun Login(){
                     contentDescription = "Campo para ingresar nombre de usuario"
                 },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = primaryBlue,
-                unfocusedBorderColor = textSecondary,
-                focusedTextColor = textPrimary,
-                unfocusedTextColor = textPrimary,
-                focusedContainerColor = surfaceColor,
-                unfocusedContainerColor = surfaceColor,
-                cursorColor = primaryBlue,
-                focusedLabelColor = primaryBlue,
-                unfocusedLabelColor = textSecondary
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF616161),
+                focusedTextColor = Color(0xFF212121),
+                unfocusedTextColor = Color(0xFF212121),
+                focusedContainerColor = Color(0xFFFFFFFF),
+                unfocusedContainerColor = Color(0xFFFFFFFF),
+                cursorColor = Color(0xFF1565C0),
+                focusedLabelColor = Color(0xFF1565C0),
+                unfocusedLabelColor = Color(0xFF616161)
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -182,14 +174,14 @@ fun Login(){
             label = {
                 Text(
                     "Contraseña",
-                    color = textSecondary,
+                    color = Color(0xFF616161),
                     fontSize = 16.sp
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu contraseña",
-                    color = textSecondary.copy(alpha = 0.7f)
+                    color = Color(0xFF616161).copy(alpha = 0.7f)
                 )
             },
             modifier = Modifier
@@ -199,15 +191,15 @@ fun Login(){
                     contentDescription = "Campo para ingresar contraseña"
                 },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = primaryBlue,
-                unfocusedBorderColor = textSecondary,
-                focusedTextColor = textPrimary,
-                unfocusedTextColor = textPrimary,
-                focusedContainerColor = surfaceColor,
-                unfocusedContainerColor = surfaceColor,
-                cursorColor = primaryBlue,
-                focusedLabelColor = primaryBlue,
-                unfocusedLabelColor = textSecondary
+                focusedBorderColor = Color(0xFF1565C0),
+                unfocusedBorderColor = Color(0xFF616161),
+                focusedTextColor = Color(0xFF212121),
+                unfocusedTextColor = Color(0xFF212121),
+                focusedContainerColor = Color(0xFFFFFFFF),
+                unfocusedContainerColor = Color(0xFFFFFFFF),
+                cursorColor = Color(0xFF1565C0),
+                focusedLabelColor = Color(0xFF1565C0),
+                unfocusedLabelColor = Color(0xFF616161)
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -236,7 +228,7 @@ fun Login(){
                     role = Role.Button
                 },
             colors = ButtonDefaults.buttonColors(
-                containerColor = primaryBlue,
+                containerColor = Color(0xFF1565C0),
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(8.dp),
@@ -270,18 +262,18 @@ fun Login(){
                     },
                 colors = CardDefaults.cardColors(
                     containerColor = if (mensajeLogin.contains("exitoso"))
-                        successColor.copy(alpha = 0.1f)
+                        Color(0xFF388E3C).copy(alpha = 0.1f)
                     else
-                        errorColor.copy(alpha = 0.1f)
+                        Color(0xFFD32F2F).copy(alpha = 0.1f)
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (mensajeLogin.contains("exitoso")) successColor else errorColor
+                    if (mensajeLogin.contains("exitoso")) Color(0xFF388E3C) else Color(0xFFD32F2F)
                 )
             ) {
                 Text(
                     text = mensajeLogin,
-                    color = if (mensajeLogin.contains("exitoso")) successColor else errorColor,
+                    color = if (mensajeLogin.contains("exitoso")) Color(0xFF388E3C) else Color(0xFFD32F2F),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center,
@@ -307,7 +299,7 @@ fun Login(){
         ) {
             Text(
                 text = "¿Olvidaste tu contraseña?",
-                color = primaryBlue,
+                color = Color(0xFF1565C0),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 textDecoration = TextDecoration.Underline
@@ -329,7 +321,7 @@ fun Login(){
         ) {
             Text(
                 text = "¿No tienes cuenta? Regístrate",
-                color = primaryBlue,
+                color = Color(0xFF1565C0),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 textDecoration = TextDecoration.Underline
