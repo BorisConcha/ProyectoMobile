@@ -8,9 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,10 +21,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -38,7 +34,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -66,6 +61,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
+import com.example.exp1_sem2.ui.theme.*
 
 class Registro : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +71,7 @@ class Registro : ComponentActivity() {
             Exp1_Sem2Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFFE8E5DA)
+                    color = White60
                 ) {
                     RegistroView()
                 }
@@ -95,6 +91,8 @@ fun RegistroView(){
     var apellidoP by remember { mutableStateOf("")}
     var apellidoM by remember { mutableStateOf("")}
     var correo by remember { mutableStateOf("")}
+    var telefono by remember { mutableStateOf("") }
+    var direccion by remember { mutableStateOf("")}
     var password by remember { mutableStateOf("")}
     var cargando by remember { mutableStateOf(false) }
     var mensajeValidacion by remember { mutableStateOf("") }
@@ -103,7 +101,7 @@ fun RegistroView(){
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
+            .background(WhiteBackground)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -118,7 +116,7 @@ fun RegistroView(){
             Icon(
                 imageVector = Icons.Default.Person,
                 contentDescription = "Icono de registro de nuevo usuario",
-                tint = Color(0xFF1565C0),
+                tint = PrimaryBlue,
                 modifier = Modifier
                     .size(64.dp)
                     .semantics {
@@ -136,7 +134,7 @@ fun RegistroView(){
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.semantics {
-                    contentDescription = "Título de la pantalla: Registro de Usuario"
+                    contentDescription = "Título de la pagina de registrar usuario"
                 },
                 textAlign = TextAlign.Center
             )
@@ -152,7 +150,7 @@ fun RegistroView(){
                 colors = CardDefaults.cardColors(
                     containerColor = Color(0xFFE3F2FD)
                 ),
-                border = BorderStroke(1.dp, Color(0xFF1565C0).copy(alpha = 0.3f)),
+                border = BorderStroke(1.dp, PrimaryBlue.copy(alpha = 0.3f)),
                 shape = RoundedCornerShape(12.dp)
             ) {
                 Row(
@@ -162,7 +160,7 @@ fun RegistroView(){
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Icono de información",
-                        tint = Color(0xFF1565C0),
+                        tint = PrimaryBlue,
                         modifier = Modifier
                             .padding(end = 12.dp, top = 2.dp)
                             .size(24.dp)
@@ -185,14 +183,14 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Nombre de Usuario",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "usuario123",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
@@ -202,15 +200,15 @@ fun RegistroView(){
                         contentDescription = "Campo para ingresar nombre de usuario único"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -226,32 +224,32 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Nombre",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu nombre",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .semantics {
-                        contentDescription = "Campo para ingresar tu nombre"
+                        contentDescription = "Campo del nombre"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -271,32 +269,32 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Apellido Paterno",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido paterno",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .semantics {
-                        contentDescription = "Campo para ingresar tu apellido paterno"
+                        contentDescription = "Campo del apellido paterno"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -315,32 +313,32 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Apellido Materno",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido materno",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .semantics {
-                        contentDescription = "Campo para ingresar tu apellido materno"
+                        contentDescription = "Campo del apellido materno"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -359,32 +357,115 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Correo Electrónico",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "ejemplo@correo.com",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .semantics {
-                        contentDescription = "Campo para ingresar tu correo electrónico"
+                        contentDescription = "Campo del correo electronico"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 16.sp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email
+                )
+            )
+        }
+
+        item {
+            OutlinedTextField(
+                value = telefono,
+                onValueChange = { telefono = it},
+                label = {
+                    Text(
+                        "Telefono",
+                        color = Grey40,
+                        fontSize = 16.sp
+                    )
+                },
+                placeholder = {
+                    Text(
+                        "Exactamente 9 digitos",
+                        color = Grey40.copy(alpha = 0.7f)
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .semantics {
+                        contentDescription = "Campo del telefono"
+                    },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
+                ),
+                shape = RoundedCornerShape(8.dp),
+                singleLine = true,
+                textStyle = TextStyle(fontSize = 16.sp)
+            )
+        }
+
+        item {
+            OutlinedTextField(
+                value = direccion,
+                onValueChange = { direccion = it },
+                label = {
+                    Text(
+                        "Direccion",
+                        color = Grey40,
+                        fontSize = 16.sp
+                    )
+                },
+                placeholder = {
+                    Text(
+                        "Tu direccion",
+                        color = Grey40.copy(alpha = 0.7f)
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .semantics {
+                        contentDescription = "Campo direccion"
+                    },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -403,32 +484,32 @@ fun RegistroView(){
                 label = {
                     Text(
                         "Contraseña",
-                        color = Color(0xFF616161),
+                        color = Grey40,
                         fontSize = 16.sp
                     )
                 },
                 placeholder = {
                     Text(
                         "Mínimo 6 caracteres",
-                        color = Color(0xFF616161).copy(alpha = 0.7f)
+                        color = Grey40.copy(alpha = 0.7f)
                     )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(64.dp)
                     .semantics {
-                        contentDescription = "Campo para crear tu contraseña"
+                        contentDescription = "Campo de la contraseña"
                     },
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1565C0),
-                    unfocusedBorderColor = Color(0xFF616161),
-                    focusedTextColor = Color(0xFF212121),
-                    unfocusedTextColor = Color(0xFF212121),
-                    focusedContainerColor = Color(0xFFFFFFFF),
-                    unfocusedContainerColor = Color(0xFFFFFFFF),
-                    cursorColor = Color(0xFF1565C0),
-                    focusedLabelColor = Color(0xFF1565C0),
-                    unfocusedLabelColor = Color(0xFF616161)
+                    focusedBorderColor = PrimaryBlue,
+                    unfocusedBorderColor = Grey40,
+                    focusedTextColor = Black40,
+                    unfocusedTextColor = Black40,
+                    focusedContainerColor = WhiteSurface,
+                    unfocusedContainerColor = WhiteSurface,
+                    cursorColor = PrimaryBlue,
+                    focusedLabelColor = PrimaryBlue,
+                    unfocusedLabelColor = Grey40
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
@@ -446,9 +527,9 @@ fun RegistroView(){
                             contentDescription = "Mensaje de validación: $mensajeValidacion"
                         },
                     colors = CardDefaults.cardColors(
-                        containerColor = Color(0xFFD32F2F).copy(alpha = 0.1f)
+                        containerColor = Error.copy(alpha = 0.1f)
                     ),
-                    border = BorderStroke(1.dp, Color(0xFFD32F2F)),
+                    border = BorderStroke(1.dp, Error),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Row(
@@ -458,14 +539,14 @@ fun RegistroView(){
                         Icon(
                             imageVector = Icons.Default.Warning,
                             contentDescription = "Icono de advertencia",
-                            tint = Color(0xFFD32F2F),
+                            tint = Error,
                             modifier = Modifier
                                 .padding(end = 12.dp, top = 2.dp)
                                 .size(24.dp)
                         )
                         Text(
                             text = mensajeValidacion,
-                            color = Color(0xFFD32F2F),
+                            color = Error,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             lineHeight = 24.sp
@@ -481,10 +562,16 @@ fun RegistroView(){
                 onClick = {
                     if (nombreUsuario.isNotBlank() && nombre.isNotBlank() &&
                         apellidoP.isNotBlank() && apellidoM.isNotBlank() &&
-                        correo.isNotBlank() && password.isNotBlank()) {
+                        correo.isNotBlank() && telefono.isNotBlank() &&
+                        direccion.isNotBlank() && password.isNotBlank()) {
 
                         if (password.length < 6) {
                             mensajeValidacion = "La contraseña debe tener al menos 6 caracteres"
+                            return@Button
+                        }
+
+                        if (telefono.length != 9) {
+                            mensajeValidacion = "El telefono debe tener exactamente 9 digitos"
                             return@Button
                         }
 
@@ -502,6 +589,8 @@ fun RegistroView(){
                             apellidoP,
                             apellidoM,
                             correo,
+                            telefono,
+                            direccion,
                             password
                         )
 
@@ -521,13 +610,13 @@ fun RegistroView(){
                     .fillMaxWidth()
                     .height(56.dp)
                     .semantics {
-                        contentDescription = "Botón para registrar nueva cuenta de usuario con todos los datos ingresados"
+                        contentDescription = "Botón para crear cuenta"
                         role = Role.Button
                     },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1565C0),
+                    containerColor = PrimaryBlue,
                     contentColor = Color.White,
-                    disabledContainerColor = Color(0xFF616161).copy(alpha = 0.3f)
+                    disabledContainerColor = Grey40.copy(alpha = 0.3f)
                 ),
                 shape = RoundedCornerShape(8.dp),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp),
@@ -581,7 +670,7 @@ fun RegistroView(){
                     context.startActivity(intent)
                 },
                 modifier = Modifier.semantics {
-                    contentDescription = "Enlace para regresar a la pantalla de inicio de sesión"
+                    contentDescription = "Retornar al inicio de sesion"
                     role = Role.Button
                 }
             ) {
@@ -589,15 +678,15 @@ fun RegistroView(){
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Icono de regresar",
-                        tint = Color(0xFF1565C0),
+                        tint = PrimaryBlue,
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "¿Ya tienes cuenta? Inicia Sesión",
-                        color = Color(0xFF1565C0),
+                        color = PrimaryBlue,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         textDecoration = TextDecoration.Underline

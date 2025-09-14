@@ -1,6 +1,5 @@
 package com.example.exp1_sem2
 
-import android.R.id
 
 
 data class Usuarios (
@@ -9,6 +8,8 @@ data class Usuarios (
     val apellidoP: String,
     val apellidoM: String,
     val correo: String,
+    val telefono: String,
+    val direccion: String,
     val password: String,
 )
 
@@ -21,6 +22,8 @@ object UsuarioRepositorio {
             apellidoP = "Perez",
             apellidoM = "Gallego",
             correo = "juanitoperez@gmail.com",
+            telefono = "913254687",
+            direccion = "Avenida siempre viva 123",
             password = "123456"
         ),
         Usuarios(
@@ -29,6 +32,8 @@ object UsuarioRepositorio {
             apellidoP = "Garcia",
             apellidoM = "Soto",
             correo = "mariagarcia@gmail.com",
+            telefono = "913254687",
+            direccion = "Avenida siempre viva 123",
             password = "maria18"
         ),
         Usuarios(
@@ -37,6 +42,8 @@ object UsuarioRepositorio {
             apellidoP = "Gonzales",
             apellidoM = "Sanchez",
             correo = "tupedrito14@gmail.com",
+            telefono = "913254687",
+            direccion = "Avenida siempre viva 123",
             password = "pepe123"
         ),
         Usuarios(
@@ -45,6 +52,8 @@ object UsuarioRepositorio {
             apellidoP = "Jimenez",
             apellidoM = "Jimenez",
             correo = "rodrigojj@gmail.com",
+            telefono = "913254687",
+            direccion = "Avenida siempre viva 123",
             password = "jeyjey531"
         ),
         Usuarios(
@@ -53,6 +62,8 @@ object UsuarioRepositorio {
             apellidoP = "Zapata",
             apellidoM = "Morales",
             correo = "manuelzapata@gmail.com",
+            telefono = "913254687",
+            direccion = "Avenida siempre viva 123",
             password = "manu798"
         ),
     )

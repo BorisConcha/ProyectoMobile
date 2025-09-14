@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
@@ -44,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
@@ -54,55 +54,57 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.example.exp1_sem2.ui.theme.*
+import com.example.exp1_sem2.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val usuarioViewModel = UsuarioViewModel()
             Exp1_Sem2Theme {
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = Color(0xFFE8E5DA)
+                    color = White60
                 ) {
-                    Login()
+                    Login(usuarioViewModel = usuarioViewModel)
                 }
             }
         }
     }
 }
 
-
-@Preview
 @Composable
-fun Login(){
+fun Login(usuarioViewModel: UsuarioViewModel) {
 
     //Variables genericas de la vista
     val context = LocalContext.current
-    var username by remember { mutableStateOf("")}
-    var password by remember { mutableStateOf("")}
-    var mensajeLogin by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var mensajeLogin1 by remember { mutableStateOf("") }
     var cargando by remember { mutableStateOf(false) }
-
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8F9FA))
+            .background(WhiteBackground)
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         val image by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.dog))
-        val animacion by animateLottieCompositionAsState(image,
-            iterations = LottieConstants.IterateForever)
+        val animacion by animateLottieCompositionAsState(
+            image,
+            iterations = LottieConstants.IterateForever
+        )
 
         //animacion
         LottieAnimation(
             composition = image,
-            progress = {animacion},
+            progress = { animacion },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
@@ -114,14 +116,15 @@ fun Login(){
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Inicia sesión para continuar",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF212121),
-            textAlign = TextAlign.Center,
+            text = "Brujula",
+            style = MaterialTheme.typography.headlineMedium.copy(
+                color = Black40,
+                fontWeight = FontWeight.Bold
+            ),
             modifier = Modifier.semantics {
-                contentDescription = "Inicia sesión para continuar usando la aplicación"
-            }
+                contentDescription = "Titulo del login de la app"
+            },
+            textAlign = TextAlign.Center
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -133,32 +136,32 @@ fun Login(){
             label = {
                 Text(
                     "Nombre de Usuario",
-                    color = Color(0xFF616161),
+                    color = Grey40,
                     fontSize = 16.sp
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu usuario",
-                    color = Color(0xFF616161).copy(alpha = 0.7f)
+                    color = Grey40.copy(alpha = 0.7f)
                 )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(64.dp)
                 .semantics {
-                    contentDescription = "Campo para ingresar nombre de usuario"
+                    contentDescription = "Campo del ingresar nombre de usuario"
                 },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0),
-                unfocusedBorderColor = Color(0xFF616161),
-                focusedTextColor = Color(0xFF212121),
-                unfocusedTextColor = Color(0xFF212121),
-                focusedContainerColor = Color(0xFFFFFFFF),
-                unfocusedContainerColor = Color(0xFFFFFFFF),
-                cursorColor = Color(0xFF1565C0),
-                focusedLabelColor = Color(0xFF1565C0),
-                unfocusedLabelColor = Color(0xFF616161)
+                focusedBorderColor = PrimaryBlue,
+                unfocusedBorderColor = Grey40,
+                focusedTextColor = Black40,
+                unfocusedTextColor = Black40,
+                focusedContainerColor = WhiteSurface,
+                unfocusedContainerColor = WhiteSurface,
+                cursorColor = PrimaryBlue,
+                focusedLabelColor = PrimaryBlue,
+                unfocusedLabelColor = Grey40
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -174,14 +177,14 @@ fun Login(){
             label = {
                 Text(
                     "Contraseña",
-                    color = Color(0xFF616161),
+                    color = Grey40,
                     fontSize = 16.sp
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu contraseña",
-                    color = Color(0xFF616161).copy(alpha = 0.7f)
+                    color = Grey40.copy(alpha = 0.7f)
                 )
             },
             modifier = Modifier
@@ -191,15 +194,15 @@ fun Login(){
                     contentDescription = "Campo para ingresar contraseña"
                 },
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color(0xFF1565C0),
-                unfocusedBorderColor = Color(0xFF616161),
-                focusedTextColor = Color(0xFF212121),
-                unfocusedTextColor = Color(0xFF212121),
-                focusedContainerColor = Color(0xFFFFFFFF),
-                unfocusedContainerColor = Color(0xFFFFFFFF),
-                cursorColor = Color(0xFF1565C0),
-                focusedLabelColor = Color(0xFF1565C0),
-                unfocusedLabelColor = Color(0xFF616161)
+                focusedBorderColor = PrimaryBlue,
+                unfocusedBorderColor = Grey40,
+                focusedTextColor = Black40,
+                unfocusedTextColor = Black40,
+                focusedContainerColor = WhiteSurface,
+                unfocusedContainerColor = WhiteSurface,
+                cursorColor = PrimaryBlue,
+                focusedLabelColor = PrimaryBlue,
+                unfocusedLabelColor = Grey40
             ),
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
@@ -213,10 +216,12 @@ fun Login(){
         Button(
             onClick = {
                 cargando = true
-                if (UsuarioRepositorio.validarLogin(username, password)) {
-                    mensajeLogin = "Inicio de sesión exitoso"
+                // Cambiar esta línea - usar el ViewModel en lugar del repositorio
+                val usuario = usuarioViewModel.getUsuarioPorNombreUsuario(username)
+                if (usuario != null && usuario.password == password) {
+                    mensajeLogin1 = "Se inicio la sesion correctamente"
                 } else {
-                    mensajeLogin = "Credenciales incorrectas"
+                    mensajeLogin1 = "Credenciales incorrectas"
                 }
                 cargando = false
             },
@@ -224,11 +229,11 @@ fun Login(){
                 .fillMaxWidth()
                 .height(56.dp)
                 .semantics {
-                    contentDescription = "Botón para iniciar sesión con nombre de usuario y contraseña"
+                    contentDescription = "Boton para iniciar sesion"
                     role = Role.Button
                 },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1565C0),
+                containerColor = PrimaryBlue,
                 contentColor = Color.White
             ),
             shape = RoundedCornerShape(8.dp),
@@ -250,7 +255,7 @@ fun Login(){
         }
 
         // Mensaje de resultado
-        if (mensajeLogin.isNotEmpty()) {
+        if (mensajeLogin1.isNotEmpty()) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Card(
@@ -258,22 +263,22 @@ fun Login(){
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
                     .semantics {
-                        contentDescription = "Mensaje de resultado del inicio de sesión: $mensajeLogin"
+                        contentDescription = "Mensaje del inicio de sesión: $mensajeLogin1"
                     },
                 colors = CardDefaults.cardColors(
-                    containerColor = if (mensajeLogin.contains("exitoso"))
-                        Color(0xFF388E3C).copy(alpha = 0.1f)
+                    containerColor = if (mensajeLogin1.contains("correctamente"))
+                        Success.copy(alpha = 0.1f)
                     else
-                        Color(0xFFD32F2F).copy(alpha = 0.1f)
+                        Error.copy(alpha = 0.1f)
                 ),
                 border = BorderStroke(
                     1.dp,
-                    if (mensajeLogin.contains("exitoso")) Color(0xFF388E3C) else Color(0xFFD32F2F)
+                    if (mensajeLogin1.contains("correctamente")) Success else Error
                 )
             ) {
                 Text(
-                    text = mensajeLogin,
-                    color = if (mensajeLogin.contains("exitoso")) Color(0xFF388E3C) else Color(0xFFD32F2F),
+                    text = mensajeLogin1,
+                    color = if (mensajeLogin1.contains("correctamente")) Success else Error,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center,
@@ -293,7 +298,7 @@ fun Login(){
                 context.startActivity(intent)
             },
             modifier = Modifier.semantics {
-                contentDescription = "Enlace para recuperar contraseña olvidada"
+                contentDescription = "Enlace para poder recuperar contraseña"
                 role = Role.Button
             }
         ) {
@@ -315,13 +320,13 @@ fun Login(){
                 context.startActivity(intent)
             },
             modifier = Modifier.semantics {
-                contentDescription = "Enlace para crear una cuenta nueva"
+                contentDescription = "Enlace para crear una nueva cuenta"
                 role = Role.Button
             }
         ) {
             Text(
                 text = "¿No tienes cuenta? Regístrate",
-                color = Color(0xFF1565C0),
+                color = PrimaryBlue,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
                 textDecoration = TextDecoration.Underline
