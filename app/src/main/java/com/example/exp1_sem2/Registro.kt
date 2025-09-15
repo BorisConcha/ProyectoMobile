@@ -1,5 +1,6 @@
 package com.example.exp1_sem2
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -60,29 +61,31 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.exp1_sem2.model.Usuario
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
 import com.example.exp1_sem2.ui.theme.*
+import com.example.exp1_sem2.viewmodel.UsuarioViewModel
 
 class Registro : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val usuarioViewModel = UsuarioViewModel()
             Exp1_Sem2Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = White60
                 ) {
-                    RegistroView()
+                    RegistroView(usuarioViewModel = usuarioViewModel)
                 }
             }
         }
     }
 }
 
-@Preview
 @Composable
-fun RegistroView(){
+fun RegistroView(usuarioViewModel: UsuarioViewModel) {
 
     //Variables formulario registro
     val context = LocalContext.current
@@ -96,7 +99,6 @@ fun RegistroView(){
     var password by remember { mutableStateOf("")}
     var cargando by remember { mutableStateOf(false) }
     var mensajeValidacion by remember { mutableStateOf("") }
-
 
     LazyColumn(
         modifier = Modifier
@@ -429,7 +431,10 @@ fun RegistroView(){
                 ),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
-                textStyle = TextStyle(fontSize = 16.sp)
+                textStyle = TextStyle(fontSize = 16.sp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone
+                )
             )
         }
 
@@ -471,7 +476,7 @@ fun RegistroView(){
                 singleLine = true,
                 textStyle = TextStyle(fontSize = 16.sp),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
+                    capitalization = KeyboardCapitalization.Words
                 )
             )
         }
@@ -580,26 +585,39 @@ fun RegistroView(){
                             return@Button
                         }
 
+                        if (usuarioViewModel.validarUsuarioPorNombre(nombreUsuario)) {
+                            mensajeValidacion = "El nombre de usuario ya existe"
+                            return@Button
+                        }
+
+                        if (usuarioViewModel.validarUsuarioPorCorreo(correo)) {
+                            mensajeValidacion = "El correo electrónico ya está registrado"
+                            return@Button
+                        }
+
                         mensajeValidacion = ""
                         cargando = true
 
-                        val nuevoUsuario = Usuarios(
-                            nombreUsuario,
-                            nombre,
-                            apellidoP,
-                            apellidoM,
-                            correo,
-                            telefono,
-                            direccion,
-                            password
+                        val nuevoUsuario = Usuario(
+                            nombreUsuario = nombreUsuario,
+                            nombre = nombre,
+                            apellidoP = apellidoP,
+                            apellidoM = apellidoM,
+                            correo = correo,
+                            telefono = telefono,
+                            direccion = direccion,
+                            password = password
                         )
 
-                        UsuarioRepositorio.agregarUsuario(nuevoUsuario)
+                        val usuarioAgregado = usuarioViewModel.agregarUsuario(nuevoUsuario)
 
-                        Toast.makeText(context, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
-
-                        val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent)
+                        if (usuarioAgregado) {
+                            Toast.makeText(context, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(context, MainActivity::class.java)
+                            context.startActivity(intent)
+                        } else {
+                            mensajeValidacion = "Error al crear el usuario"
+                        }
 
                         cargando = false
                     } else {
@@ -666,8 +684,9 @@ fun RegistroView(){
         item {
             TextButton(
                 onClick = {
-                    val intent = Intent(context, MainActivity::class.java)
-                    context.startActivity(intent)
+                    if (context is Activity) {
+                        context.finish()
+                    }
                 },
                 modifier = Modifier.semantics {
                     contentDescription = "Retornar al inicio de sesion"
@@ -698,5 +717,13 @@ fun RegistroView(){
         item {
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RegistroPreview() {
+    Exp1_Sem2Theme {
+        RegistroView(usuarioViewModel = UsuarioViewModel())
     }
 }

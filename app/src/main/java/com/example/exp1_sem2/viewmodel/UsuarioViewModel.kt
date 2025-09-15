@@ -1,30 +1,29 @@
 package com.example.exp1_sem2.viewmodel
 
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.example.exp1_sem2.model.Usuario
 import com.example.exp1_sem2.interfaces.InterfaceUsuario
 
 class UsuarioViewModel: ViewModel(), InterfaceUsuario {
-    private val _usuarios = mutableStateListOf<Usuario>()
+
+    companion object {
+        private val _usuariosGlobales = mutableStateListOf<Usuario>()
+        private var inicializado = false
+    }
+    private val _usuarios = _usuariosGlobales
 
     val usuarios: List<Usuario> get() = _usuarios
 
-    var mensajeLogin by mutableStateOf("")
-        private set
-
-    var loginExitoso by mutableStateOf(false)
-        private set
-
     init {
-        listaUsuarios()
+        if (!inicializado) {
+            listaUsuarios()
+            inicializado = true
+        }
     }
 
     private fun listaUsuarios() {
-        val usuarioslist = listOf(
+        val usuarioslist = mutableListOf(
             Usuario(
                 nombreUsuario = "juanito555",
                 nombre = "Juan",
@@ -88,8 +87,10 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
         return getUsuarioPorNombreUsuario(nombreUsuario)
     }
 
-    override fun obtenerUsuarioPorCorreo(correo: String): Usuario? {
-        return getUsuarioPorCorreo(correo)
+    override fun obtenerUsuarioPorCorreo(correo: String): String? {
+        val user = getUsuarioPorCorreo(correo)
+
+        return user?.password
     }
 
     override fun validarUsuarioPorCorreo(correo: String): Boolean {
@@ -101,9 +102,6 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
     }
 
     fun agregarNewUsuario(usuario: Usuario): Boolean {
-        if (existeUsuario(usuario.nombreUsuario, usuario.correo)) {
-            return false
-        }
 
         _usuarios.add(usuario)
         return true
@@ -121,43 +119,5 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
         }
     }
 
-    fun validarLogin(nombreUsuario: String, password: String) {
-        val usuario = getUsuarioPorNombreUsuario(nombreUsuario)
-
-        if (usuario != null && usuario.password == password) {
-            loginExitoso = true
-            mensajeLogin = "Se inicio sesion correctamente"
-        } else {
-            loginExitoso = false
-            mensajeLogin = "Credenciales incorrectas"
-        }
-    }
-
-    fun buscarUsuariobyCorreo(correo: String): String? {
-        return getUsuarioPorCorreo(correo)?.password
-    }
-
-    fun recuperarPassword(correo: String): String {
-        val usuario = getUsuarioPorCorreo(correo)
-        return if (usuario != null) {
-            "Tu contraseña es: ${usuario.password}"
-        } else {
-            "No se encontró un usuario con ese correo"
-        }
-    }
-
-    fun limpiarMensajes() {
-        mensajeLogin = ""
-        loginExitoso = false
-    }
-
-    private fun existeUsuario(nombreUsuario: String, correo: String): Boolean {
-        return _usuarios.any {
-            it.nombreUsuario.equals(nombreUsuario, ignoreCase = true) ||
-                    it.correo.equals(correo, ignoreCase = true)
-        }
-    }
-
-    fun getTotalUsuarios(): Int = _usuarios.size
 
 }

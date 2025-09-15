@@ -8,7 +8,7 @@ interface InterfaceUsuario {
 
     fun obtenerUsuarioPorNombre(nombreUsuario: String): Usuario?
 
-    fun obtenerUsuarioPorCorreo(correo: String): Usuario?
+    fun obtenerUsuarioPorCorreo(correo: String): String?
 
     fun validarUsuarioPorCorreo(correo: String): Boolean
 

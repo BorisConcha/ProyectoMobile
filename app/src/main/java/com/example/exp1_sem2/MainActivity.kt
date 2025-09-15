@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
@@ -62,7 +64,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val usuarioViewModel = UsuarioViewModel()
+            val usuarioViewModel: UsuarioViewModel by viewModels()
             Exp1_Sem2Theme {
 
                 Surface(
@@ -216,8 +218,7 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
         Button(
             onClick = {
                 cargando = true
-                // Cambiar esta línea - usar el ViewModel en lugar del repositorio
-                val usuario = usuarioViewModel.getUsuarioPorNombreUsuario(username)
+                val usuario = usuarioViewModel.obtenerUsuarioPorNombre(username)
                 if (usuario != null && usuario.password == password) {
                     mensajeLogin1 = "Se inicio la sesion correctamente"
                 } else {
@@ -334,5 +335,13 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginPreview() {
+    Exp1_Sem2Theme {
+        Login(usuarioViewModel = UsuarioViewModel())
     }
 }

@@ -63,6 +63,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
 import com.example.exp1_sem2.ui.theme.*
+import com.example.exp1_sem2.model.Usuario
+import com.example.exp1_sem2.viewmodel.UsuarioViewModel
 
 
 class RecuperarPassword : ComponentActivity() {
@@ -70,20 +72,20 @@ class RecuperarPassword : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val usuarioViewModel = UsuarioViewModel()
             Exp1_Sem2Theme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = White60
                 ) {
-                    RecuperarPasswordView()
+                    RecuperarPasswordView(usuarioViewModel = usuarioViewModel)
                 }
             }
         }
     }
 }
-@Preview
 @Composable
-fun RecuperarPasswordView(){
+fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
 
     val context = LocalContext.current
     var correo by remember { mutableStateOf("")}
@@ -221,7 +223,7 @@ fun RecuperarPasswordView(){
         Button(
             onClick = {
                 cargando = true
-                val password = UsuarioRepositorio.buscarUsuarioPorCorreo(correo)
+                val password = usuarioViewModel.obtenerUsuarioPorCorreo(correo)
                 if (password != null) {
                     mensajeRecuperarPassword = "Tu contraseña es: $password"
                 } else {
@@ -396,5 +398,13 @@ fun RecuperarPasswordView(){
                     }
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RecuperarPassPreview() {
+    Exp1_Sem2Theme {
+        RecuperarPasswordView(usuarioViewModel = UsuarioViewModel())
     }
 }
