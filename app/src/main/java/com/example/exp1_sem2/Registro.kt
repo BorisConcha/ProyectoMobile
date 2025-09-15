@@ -689,7 +689,7 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     }
                 },
                 modifier = Modifier.semantics {
-                    contentDescription = "Retornar al inicio de sesion"
+                    contentDescription = "Volver al login"
                     role = Role.Button
                 }
             ) {
