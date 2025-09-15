@@ -4,6 +4,10 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.exp1_sem2.model.Usuario
 import com.example.exp1_sem2.interfaces.InterfaceUsuario
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class UsuarioViewModel: ViewModel(), InterfaceUsuario {
 
@@ -12,12 +16,14 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
         private var inicializado = false
     }
     private val _usuarios = _usuariosGlobales
+    val db = FirebaseFirestore.getInstance()
 
     val usuarios: List<Usuario> get() = _usuarios
 
     init {
         if (!inicializado) {
             listaUsuarios()
+            cargarUsuariosDeFirebase()
             inicializado = true
         }
     }
@@ -77,6 +83,30 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
         )
 
         _usuarios.addAll(usuarioslist)
+
+        guardarUsuariosEnFirebase(usuarioslist)
+    }
+
+    private fun cargarUsuariosDeFirebase() {
+        db.collection("usuarios")
+            .get()
+            .addOnSuccessListener { documents ->
+                _usuarios.clear()
+                for (document in documents) {
+                    val usuario = document.toObject(Usuario::class.java)
+                    _usuarios.add(usuario)
+                }
+            }
+    }
+
+    private fun guardarUsuariosEnFirebase(usuarios: List<Usuario>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            usuarios.forEach { usuario ->
+                db.collection("usuarios")
+                    .document(usuario.nombreUsuario)
+                    .set(usuario)
+            }
+        }
     }
 
     override fun agregarUsuario(usuario: Usuario): Boolean {
@@ -104,6 +134,11 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
     fun agregarNewUsuario(usuario: Usuario): Boolean {
 
         _usuarios.add(usuario)
+
+        db.collection("usuarios")
+            .document(usuario.nombreUsuario)
+            .set(usuario)
+
         return true
     }
 
@@ -121,3 +156,4 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
 
 
 }
+
