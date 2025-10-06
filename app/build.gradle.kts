@@ -46,6 +46,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("com.airbnb.android:lottie-compose:6.6.6")
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
