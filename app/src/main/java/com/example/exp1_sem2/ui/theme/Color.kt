@@ -25,3 +25,9 @@ val Grey40 = Color(0xFF616161)
 val Error = Color(0xFFD32F2F)
 
 val Success = Color(0xFF388E3C)
+
+val Greener = Color(0xFF007C6D)
+
+val OrangeSoft = Color(0xFFEE6F00)
+
+val PurpleSoft = Color(0xFF723FA8)
