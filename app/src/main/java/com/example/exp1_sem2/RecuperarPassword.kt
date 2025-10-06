@@ -5,9 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,13 +28,16 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -63,8 +68,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
 import com.example.exp1_sem2.ui.theme.*
-import com.example.exp1_sem2.model.Usuario
+import com.example.exp1_sem2.viewmodel.AccesibilidadViewModel
 import com.example.exp1_sem2.viewmodel.UsuarioViewModel
+import kotlin.getValue
 
 
 class RecuperarPassword : ComponentActivity() {
@@ -73,12 +79,50 @@ class RecuperarPassword : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val usuarioViewModel = UsuarioViewModel()
-            Exp1_Sem2Theme {
+            val accesibilidadVM: AccesibilidadViewModel by viewModels()
+            var mostrarMenu by remember { mutableStateOf(false) }
+            Exp1_Sem2Theme(darkTheme = accesibilidadVM.modoOscuro,
+                tamanoFuente = accesibilidadVM.tamanoFuente) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = White60
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    RecuperarPasswordView(usuarioViewModel = usuarioViewModel)
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            RecuperarPasswordView(usuarioViewModel = usuarioViewModel)
+                        }
+
+                        IconButton(
+                            onClick = { mostrarMenu = true },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(top = 60.dp, end = 16.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = "Configuración",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
+                        if (mostrarMenu) {
+                            AlertDialog(
+                                onDismissRequest = { mostrarMenu = false },
+                                title = { Text("Accesibilidad") },
+                                text = {
+                                    Accesibilidad(viewModel = accesibilidadVM)
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = { mostrarMenu = false }) {
+                                        Text("Cerrar")
+                                    }
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -95,7 +139,7 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(WhiteBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -117,7 +161,7 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
         Text(
             text = "Recuperar Contraseña",
             style = MaterialTheme.typography.headlineMedium.copy(
-                color = Black40,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             ),
             modifier = Modifier
@@ -156,7 +200,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                 )
                 Text(
                     text = "Te ayudaremos a recuperar tu cuenta. Ingresa tu correo electrónico registrado en el sistema para poder recuperar tus datos.",
-                    fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
                     color = Black40,
                     lineHeight = 24.sp,
                     modifier = Modifier.semantics {
@@ -174,14 +220,15 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
             label = {
                 Text(
                     "Correo Electrónico",
-                    color = Grey40,
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             },
             placeholder = {
                 Text(
                     "ejemplo@correo.com",
-                    color = Grey40.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             },
             leadingIcon = {
@@ -199,11 +246,11 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                 },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = PrimaryBlue,
-                unfocusedBorderColor = Grey40,
-                focusedTextColor = Black40,
-                unfocusedTextColor = Black40,
-                focusedContainerColor = WhiteSurface,
-                unfocusedContainerColor = WhiteSurface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = PrimaryBlue,
                 focusedLabelColor = PrimaryBlue,
                 unfocusedLabelColor = Grey40
@@ -260,8 +307,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Procesando...",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
                         color = Color.White
                     )
                 }
@@ -279,8 +327,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Enviar Correo",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
                         color = Color.White
                     )
                 }
@@ -329,8 +378,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                     Text(
                         text = mensajeRecuperarPassword,
                         color = if (mensajeRecuperarPassword.contains(":")) Success else Error,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
                         lineHeight = 24.sp
                     )
                 }
@@ -364,8 +414,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
                 Text(
                     text = "Volver al Login",
                     color = PrimaryBlue,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     textDecoration = TextDecoration.Underline
                 )
             }
@@ -388,7 +439,9 @@ fun RecuperarPasswordView(usuarioViewModel: UsuarioViewModel){
         ) {
             Text(
                 text = "¿Tienes problemas? Contacta nuestro soporte técnico para obtener ayuda adicional.",
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium
+                ),
                 color = Grey40,
                 textAlign = TextAlign.Center,
                 modifier = Modifier

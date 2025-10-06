@@ -8,31 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,6 +38,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.example.exp1_sem2.ui.theme.*
+import com.example.exp1_sem2.viewmodel.AccesibilidadViewModel
 import com.example.exp1_sem2.viewmodel.UsuarioViewModel
 
 class MainActivity : ComponentActivity() {
@@ -65,13 +47,45 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val usuarioViewModel: UsuarioViewModel by viewModels()
-            Exp1_Sem2Theme {
+            val accesibilidadVM: AccesibilidadViewModel by viewModels()
+            var mostrarMenu by remember { mutableStateOf(false) }
+            Exp1_Sem2Theme(darkTheme = accesibilidadVM.modoOscuro,
+                tamanoFuente = accesibilidadVM.tamanoFuente) {
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Login(usuarioViewModel = usuarioViewModel)
+                    }
 
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = White60
-                ) {
-                    Login(usuarioViewModel = usuarioViewModel)
+                    IconButton(
+                        onClick = { mostrarMenu = true },
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 60.dp, end = 16.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            contentDescription = "Configuración",
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+
+                    if (mostrarMenu) {
+                        AlertDialog(
+                            onDismissRequest = { mostrarMenu = false },
+                            title = { Text("Accesibilidad") },
+                            text = {
+                                Accesibilidad(viewModel = accesibilidadVM)
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { mostrarMenu = false }) {
+                                    Text("Cerrar")
+                                }
+                            }
+                        )
+                    }
                 }
             }
         }
@@ -81,7 +95,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Login(usuarioViewModel: UsuarioViewModel) {
 
-    //Variables genericas de la vista
     val context = LocalContext.current
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -91,7 +104,7 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(WhiteBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 32.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -110,8 +123,9 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
+                .background(MaterialTheme.colorScheme.background)
                 .semantics {
-                    contentDescription = "Animación de una persona leyendo"
+                    contentDescription = "Animación"
                 }
         )
 
@@ -120,7 +134,7 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
         Text(
             text = "Brujula",
             style = MaterialTheme.typography.headlineMedium.copy(
-                color = Black40,
+                color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Bold
             ),
             modifier = Modifier.semantics {
@@ -138,14 +152,15 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             label = {
                 Text(
                     "Nombre de Usuario",
-                    color = Grey40,
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu usuario",
-                    color = Grey40.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             },
             modifier = Modifier
@@ -156,11 +171,11 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
                 },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = PrimaryBlue,
-                unfocusedBorderColor = Grey40,
-                focusedTextColor = Black40,
-                unfocusedTextColor = Black40,
-                focusedContainerColor = WhiteSurface,
-                unfocusedContainerColor = WhiteSurface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = PrimaryBlue,
                 focusedLabelColor = PrimaryBlue,
                 unfocusedLabelColor = Grey40
@@ -179,14 +194,15 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             label = {
                 Text(
                     "Contraseña",
-                    color = Grey40,
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             },
             placeholder = {
                 Text(
                     "Ingresa tu contraseña",
-                    color = Grey40.copy(alpha = 0.7f)
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                 )
             },
             modifier = Modifier
@@ -197,11 +213,11 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
                 },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = PrimaryBlue,
-                unfocusedBorderColor = Grey40,
-                focusedTextColor = Black40,
-                unfocusedTextColor = Black40,
-                focusedContainerColor = WhiteSurface,
-                unfocusedContainerColor = WhiteSurface,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = PrimaryBlue,
                 focusedLabelColor = PrimaryBlue,
                 unfocusedLabelColor = Grey40
@@ -209,7 +225,7 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             shape = RoundedCornerShape(8.dp),
             singleLine = true,
             visualTransformation = PasswordVisualTransformation(),
-            textStyle = TextStyle(fontSize = 16.sp)
+            textStyle = MaterialTheme.typography.bodyLarge
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -248,8 +264,9 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             } else {
                 Text(
                     "Iniciar Sesión",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.labelLarge.copy(
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     color = Color.White
                 )
             }
@@ -280,8 +297,9 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
                 Text(
                     text = mensajeLogin1,
                     color = if (mensajeLogin1.contains("correctamente")) Success else Error,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        fontWeight = FontWeight.Medium
+                    ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -306,9 +324,10 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             Text(
                 text = "¿Olvidaste tu contraseña?",
                 color = Color(0xFF1565C0),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                textDecoration = TextDecoration.Underline
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    textDecoration = TextDecoration.Underline
+                )
             )
         }
 
@@ -328,9 +347,10 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
             Text(
                 text = "¿No tienes cuenta? Regístrate",
                 color = PrimaryBlue,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                textDecoration = TextDecoration.Underline
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontWeight = FontWeight.Medium,
+                    textDecoration = TextDecoration.Underline
+                )
             )
         }
 

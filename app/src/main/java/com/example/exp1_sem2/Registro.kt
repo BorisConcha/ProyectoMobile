@@ -7,9 +7,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,13 +27,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -64,7 +69,9 @@ import androidx.compose.ui.unit.sp
 import com.example.exp1_sem2.model.Usuario
 import com.example.exp1_sem2.ui.theme.Exp1_Sem2Theme
 import com.example.exp1_sem2.ui.theme.*
+import com.example.exp1_sem2.viewmodel.AccesibilidadViewModel
 import com.example.exp1_sem2.viewmodel.UsuarioViewModel
+import kotlin.getValue
 
 class Registro : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,12 +79,50 @@ class Registro : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val usuarioViewModel = UsuarioViewModel()
-            Exp1_Sem2Theme {
+            val accesibilidadVM: AccesibilidadViewModel by viewModels()
+            var mostrarMenu by remember { mutableStateOf(false) }
+            Exp1_Sem2Theme(darkTheme = accesibilidadVM.modoOscuro,
+                tamanoFuente = accesibilidadVM.tamanoFuente) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = White60
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                    RegistroView(usuarioViewModel = usuarioViewModel)
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Surface(
+                            modifier = Modifier.fillMaxSize(),
+                            color = MaterialTheme.colorScheme.background
+                        ) {
+                            RegistroView(usuarioViewModel = usuarioViewModel)
+                        }
+
+                        IconButton(
+                            onClick = { mostrarMenu = true },
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(top = 60.dp, end = 16.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = "Configuración",
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+
+                        if (mostrarMenu) {
+                            AlertDialog(
+                                onDismissRequest = { mostrarMenu = false },
+                                title = { Text("Accesibilidad") },
+                                text = {
+                                    Accesibilidad(viewModel = accesibilidadVM)
+                                },
+                                confirmButton = {
+                                    TextButton(onClick = { mostrarMenu = false }) {
+                                        Text("Cerrar")
+                                    }
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -103,7 +148,7 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(WhiteBackground)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -132,7 +177,7 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
             Text(
                 text = "Registro de Usuario",
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    color = Color(0xFF212121),
+                    color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.semantics {
@@ -169,7 +214,9 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     )
                     Text(
                         text = "Completa todos los campos para crear tu cuenta. Asegúrate de usar un correo válido y una contraseña segura.",
-                        fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Medium
+                        ),
                         color = Color(0xFF212121),
                         lineHeight = 24.sp
                     )
@@ -185,14 +232,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Nombre de Usuario",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "usuario123",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -203,11 +251,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -226,14 +274,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Nombre",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu nombre",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -244,11 +293,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -271,14 +320,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Apellido Paterno",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido paterno",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -289,11 +339,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -315,14 +365,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Apellido Materno",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu apellido materno",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -333,11 +384,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -359,14 +410,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Correo Electrónico",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "ejemplo@correo.com",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -377,11 +429,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -402,14 +454,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Telefono",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Exactamente 9 digitos",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -420,11 +473,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -445,14 +498,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Direccion",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Tu direccion",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -463,11 +517,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -489,14 +543,15 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                 label = {
                     Text(
                         "Contraseña",
-                        color = Grey40,
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                     )
                 },
                 placeholder = {
                     Text(
                         "Mínimo 6 caracteres",
-                        color = Grey40.copy(alpha = 0.7f)
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                     )
                 },
                 modifier = Modifier
@@ -507,11 +562,11 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = PrimaryBlue,
-                    unfocusedBorderColor = Grey40,
-                    focusedTextColor = Black40,
-                    unfocusedTextColor = Black40,
-                    focusedContainerColor = WhiteSurface,
-                    unfocusedContainerColor = WhiteSurface,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     cursorColor = PrimaryBlue,
                     focusedLabelColor = PrimaryBlue,
                     unfocusedLabelColor = Grey40
@@ -652,8 +707,9 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             "Creando cuenta...",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
                             color = Color.White
                         )
                     }
@@ -671,8 +727,9 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             "Crear Cuenta",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            style = MaterialTheme.typography.labelLarge.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
                             color = Color.White
                         )
                     }
@@ -706,9 +763,10 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                     Text(
                         text = "¿Ya tienes cuenta? Inicia Sesión",
                         color = PrimaryBlue,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
-                        textDecoration = TextDecoration.Underline
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            fontWeight = FontWeight.Medium,
+                            textDecoration = TextDecoration.Underline
+                        )
                     )
                 }
             }

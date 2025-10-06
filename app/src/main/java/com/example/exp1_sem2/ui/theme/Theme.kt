@@ -10,6 +10,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -38,6 +40,7 @@ fun Exp1_Sem2Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
+    tamanoFuente: Float = 16f,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -50,9 +53,21 @@ fun Exp1_Sem2Theme(
         else -> LightColorScheme
     }
 
+    val tipografiaAjustable = Typography.copy(
+        bodyLarge = TextStyle(fontSize = tamanoFuente.sp),
+        bodyMedium = TextStyle(fontSize = (tamanoFuente - 2).sp),
+        bodySmall = TextStyle(fontSize = (tamanoFuente - 4).sp),
+        titleLarge = TextStyle(fontSize = (tamanoFuente + 6).sp),
+        titleMedium = TextStyle(fontSize = (tamanoFuente + 2).sp),
+        titleSmall = TextStyle(fontSize = tamanoFuente.sp),
+        labelLarge = TextStyle(fontSize = tamanoFuente.sp),
+        labelMedium = TextStyle(fontSize = (tamanoFuente - 2).sp),
+        labelSmall = TextStyle(fontSize = (tamanoFuente - 4).sp),
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = tipografiaAjustable,
         content = content
     )
 }

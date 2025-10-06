@@ -9,7 +9,6 @@
     <uses-feature
         android:name="android.hardware.touchscreen"
         android:required="true" />
-
     <uses-feature
         android:name="android.software.tts"
         android:required="false" />
@@ -23,6 +22,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exp1_Sem2">
+        <activity
+            android:name=".Accesibilidad"
+            android:exported="false"
+            android:label="@string/title_activity_accesibilidad"
+            android:theme="@style/Theme.Exp1_Sem2" />
         <activity
             android:name=".RecuperarPassword"
             android:exported="false"
