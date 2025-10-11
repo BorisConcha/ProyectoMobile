@@ -237,7 +237,8 @@ fun Login(usuarioViewModel: UsuarioViewModel) {
                 val usuario = usuarioViewModel.obtenerUsuarioPorNombre(username)
                 if (usuario != null && usuario.password == password) {
                     val intent = Intent(context, Home::class.java)
-                    intent.putExtra("nombreUsuario", usuario.nombre)
+                    intent.putExtra("nombre", usuario.nombre)
+                    intent.putExtra("nombreUsuario", usuario.nombreUsuario)
                     context.startActivity(intent)
                 } else {
                     mensajeLogin1 = "Credenciales incorrectas"

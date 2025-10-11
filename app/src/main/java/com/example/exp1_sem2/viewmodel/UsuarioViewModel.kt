@@ -5,16 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.example.exp1_sem2.model.Usuario
 import com.example.exp1_sem2.interfaces.InterfaceUsuario
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+
 
 class UsuarioViewModel: ViewModel(), InterfaceUsuario {
-
     companion object {
         private val _usuariosGlobales = mutableStateListOf<Usuario>()
         private var inicializado = false
     }
+
     private val _usuarios = _usuariosGlobales
     val db = FirebaseFirestore.getInstance()
 
@@ -22,95 +20,64 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
 
     init {
         if (!inicializado) {
-            listaUsuarios()
             cargarUsuariosDeFirebase()
             inicializado = true
         }
     }
 
-    private fun listaUsuarios() {
-        val usuarioslist = mutableListOf(
-            Usuario(
-                nombreUsuario = "juanito555",
-                nombre = "Juan",
-                apellidoP = "Perez",
-                apellidoM = "Gallego",
-                correo = "juanitoperez@gmail.com",
-                telefono = "913254687",
-                direccion = "Avenida siempre viva 123",
-                password = "123456"
-            ),
-            Usuario(
-                nombreUsuario = "mari123",
-                nombre = "Maria",
-                apellidoP = "Garcia",
-                apellidoM = "Soto",
-                correo = "mariagarcia@gmail.com",
-                telefono = "913254687",
-                direccion = "Avenida siempre viva 123",
-                password = "maria18"
-            ),
-            Usuario(
-                nombreUsuario = "pepito400",
-                nombre = "Pedro",
-                apellidoP = "Gonzales",
-                apellidoM = "Sanchez",
-                correo = "tupedrito14@gmail.com",
-                telefono = "913254687",
-                direccion = "Avenida siempre viva 123",
-                password = "pepe123"
-            ),
-            Usuario(
-                nombreUsuario = "rodrigo531",
-                nombre = "Rodrigo",
-                apellidoP = "Jimenez",
-                apellidoM = "Jimenez",
-                correo = "rodrigojj@gmail.com",
-                telefono = "913254687",
-                direccion = "Avenida siempre viva 123",
-                password = "jeyjey531"
-            ),
-            Usuario(
-                nombreUsuario = "manuel700",
-                nombre = "Manuel",
-                apellidoP = "Zapata",
-                apellidoM = "Morales",
-                correo = "manuelzapata@gmail.com",
-                telefono = "913254687",
-                direccion = "Avenida siempre viva 123",
-                password = "manu798"
-            )
-        )
-
-        _usuarios.addAll(usuarioslist)
-
-        guardarUsuariosEnFirebase(usuarioslist)
-    }
-
     private fun cargarUsuariosDeFirebase() {
         db.collection("usuarios")
-            .get()
-            .addOnSuccessListener { documents ->
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    println("Error al cargar usuarios: ${error.message}")
+                    return@addSnapshotListener
+                }
+
                 _usuarios.clear()
-                for (document in documents) {
-                    val usuario = document.toObject(Usuario::class.java)
+                snapshot?.documents?.forEach { document ->
+                    val userId = try {
+                        document.getLong("id")?.toInt() ?: 0
+                    } catch (e: Exception) {
+                        document.getString("id")?.toIntOrNull() ?: 0
+                    }
+
+                    val usuario = Usuario(
+                        id = userId,
+                        nombreUsuario = document.getString("nombreUsuario") ?: "",
+                        nombre = document.getString("nombre") ?: "",
+                        apellidoP = document.getString("apellidoP") ?: "",
+                        apellidoM = document.getString("apellidoM") ?: "",
+                        correo = document.getString("correo") ?: "",
+                        telefono = document.getString("telefono") ?: "",
+                        direccion = document.getString("direccion") ?: "",
+                        password = document.getString("password") ?: ""
+                    )
                     _usuarios.add(usuario)
                 }
             }
     }
 
-    private fun guardarUsuariosEnFirebase(usuarios: List<Usuario>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            usuarios.forEach { usuario ->
-                db.collection("usuarios")
-                    .document(usuario.nombreUsuario)
-                    .set(usuario)
-            }
+    private fun obtenerSiguienteId(callback: (Int) -> Unit) {
+        val contadorRef = db.collection("contadores").document("usuarios")
+
+        db.runTransaction { transaction ->
+            val snapshot = transaction.get(contadorRef)
+            val ultimoId = snapshot.getLong("ultimo")?.toInt() ?: 0
+            val nuevoId = ultimoId + 1
+
+            transaction.update(contadorRef, "ultimo", nuevoId)
+
+            nuevoId
+        }.addOnSuccessListener { nuevoId ->
+            callback(nuevoId)
+        }.addOnFailureListener { e ->
+            println("Error al obtener siguiente ID: ${e.message}")
+            callback(0)
         }
     }
 
     override fun agregarUsuario(usuario: Usuario): Boolean {
-        return agregarNewUsuario(usuario)
+        throw UnsupportedOperationException("Usa agregarNewUsuario con callbacks")
     }
 
     override fun obtenerUsuarioPorNombre(nombreUsuario: String): Usuario? {
@@ -119,27 +86,59 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
 
     override fun obtenerUsuarioPorCorreo(correo: String): String? {
         val user = getUsuarioPorCorreo(correo)
-
         return user?.password
     }
 
-    override fun validarUsuarioPorCorreo(correo: String): Boolean {
-        return _usuarios.any { it.correo.equals(correo, ignoreCase = true) }
-    }
-
     override fun validarUsuarioPorNombre(nombreUsuario: String): Boolean {
-        return _usuarios.any { it.nombreUsuario.equals(nombreUsuario, ignoreCase = true) }
+        return _usuarios.none { it.nombreUsuario.equals(nombreUsuario, ignoreCase = true) }
     }
 
-    fun agregarNewUsuario(usuario: Usuario): Boolean {
+    override fun validarUsuarioPorCorreo(correo: String): Boolean {
+        return _usuarios.none { it.correo.equals(correo, ignoreCase = true) }
+    }
 
-        _usuarios.add(usuario)
+    fun agregarNewUsuario(
+        usuario: Usuario,
+        onSuccess: (Int) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        if (!validarUsuarioPorNombre(usuario.nombreUsuario)) {
+            onError("El nombre de usuario ya existe")
+            return
+        }
 
-        db.collection("usuarios")
-            .document(usuario.nombreUsuario)
-            .set(usuario)
+        if (!validarUsuarioPorCorreo(usuario.correo)) {
+            onError("El correo ya está registrado")
+            return
+        }
 
-        return true
+        obtenerSiguienteId { nuevoId ->
+            if (nuevoId == 0) {
+                onError("Error al generar ID de usuario")
+                return@obtenerSiguienteId
+            }
+
+            val datosUsuario = hashMapOf(
+                "id" to nuevoId,
+                "nombreUsuario" to usuario.nombreUsuario,
+                "nombre" to usuario.nombre,
+                "apellidoP" to usuario.apellidoP,
+                "apellidoM" to usuario.apellidoM,
+                "correo" to usuario.correo,
+                "telefono" to usuario.telefono,
+                "direccion" to usuario.direccion,
+                "password" to usuario.password
+            )
+
+            db.collection("usuarios")
+                .add(datosUsuario)
+                .addOnSuccessListener {
+                    onSuccess(nuevoId)
+                }
+                .addOnFailureListener { e ->
+                    onError(e.message ?: "Error al agregar usuario")
+                }
+        }
     }
 
     fun getUsuarioPorNombreUsuario(nombreUsuario: String): Usuario? {
@@ -153,7 +152,5 @@ class UsuarioViewModel: ViewModel(), InterfaceUsuario {
             it.correo.equals(correo, ignoreCase = true)
         }
     }
-
-
 }
 

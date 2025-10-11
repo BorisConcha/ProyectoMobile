@@ -63,7 +63,8 @@ class Home : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val userName = intent.getStringExtra("nombreUsuario") ?: "Usuario"
+        val Nombre = intent.getStringExtra("nombre") ?: "Usuario"
+        val NombreUsuario = intent.getStringExtra("nombreUsuario") ?: ""
         setContent {
             val usuarioViewModel = UsuarioViewModel()
             val accesibilidadVM: AccesibilidadViewModel by viewModels()
@@ -75,7 +76,7 @@ class Home : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        HomeView(usuarioViewModel = usuarioViewModel,userName)
+                        HomeView(usuarioViewModel = usuarioViewModel,Nombre, NombreUsuario)
                     }
 
                     IconButton(
@@ -112,39 +113,16 @@ class Home : ComponentActivity() {
 }
 
 @Composable
-fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
+fun HomeView(usuarioViewModel: UsuarioViewModel, nombre: String, nombreUsuario: String) {
     val context = LocalContext.current
 
     val vozHelper = remember { VozHelper(context) }
-
-    var textoReconocido by remember { mutableStateOf("") }
-    var mostrarDialogoVoz by remember { mutableStateOf(false) }
-
     var ubicacionActual by remember { mutableStateOf<Location?>(null) }
     var mostrarDialogoGPS by remember { mutableStateOf(false) }
     var mensajeGPS by remember { mutableStateOf("") }
 
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    val requestAudioPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                putExtra(
-                    RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                )
-                putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES")
-                putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla ahora...")
-            }
-            try {
-                (context as? Activity)?.startActivityForResult(intent, 100)
-            } catch (e: Exception) {
-            }
-        }
     }
 
     val requestLocationPermissions = rememberLauncherForActivityResult(
@@ -166,43 +144,6 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
                     vozHelper.hablar(error)
                 }
             )
-        }
-    }
-
-    val speechLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val matches = result.data?.getStringArrayListExtra(
-                RecognizerIntent.EXTRA_RESULTS
-            )
-            textoReconocido = matches?.firstOrNull() ?: ""
-            if (textoReconocido.isNotEmpty()) {
-                vozHelper.hablar("Dijiste: $textoReconocido")
-                mostrarDialogoVoz = true
-            }
-        }
-    }
-
-    fun iniciarReconocimientoVoz() {
-        when {
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.RECORD_AUDIO
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-                    putExtra(
-                        RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
-                    )
-                    putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES")
-                    putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla ahora...")
-                }
-                speechLauncher.launch(intent)
-            }
-            else -> {
-                requestAudioPermission.launch(Manifest.permission.RECORD_AUDIO)
-            }
         }
     }
 
@@ -264,14 +205,14 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
                 )
             )
             Text(
-                text = userName,
+                text = nombre,
                 style = MaterialTheme.typography.headlineLarge.copy(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp
                 ),
                 modifier = Modifier.semantics {
-                    contentDescription = "Bienvenida a $userName"
+                    contentDescription = "Bienvenida a $nombre"
                 }
             )
             Spacer(modifier = Modifier.height(4.dp))
@@ -342,8 +283,9 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
 
         ElevatedCard(
             onClick = {
-                vozHelper.hablar("Iniciando reconocimiento de voz")
-                iniciarReconocimientoVoz()
+                val intent = Intent(context, Hablar::class.java)
+                intent.putExtra("nombreUsuario", nombreUsuario)
+                context.startActivity(intent)
             },
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 6.dp
@@ -397,7 +339,9 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
 
         ElevatedCard(
             onClick = {
-                vozHelper.hablar("Hola $userName, bienvenido a la aplicación Brujula. Esta función lee texto en voz alta.")
+                val intent = Intent(context, Escribir::class.java)
+                intent.putExtra("nombreUsuario", nombreUsuario)
+                context.startActivity(intent)
             },
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 6.dp
@@ -425,14 +369,14 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
                     horizontalArrangement = Arrangement.Start
                 ) {
                     Icon(
-                        imageVector = Icons.Default.VolumeUp,
+                        imageVector = Icons.Default.Keyboard,
                         contentDescription = "Icono Texto a Voz",
                         modifier = Modifier.size(40.dp),
                         tint = White60
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     Text(
-                        text = "Escuchar",
+                        text = "Escribir",
                         style = MaterialTheme.typography.titleMedium,
                         color = White60
                     )
@@ -451,7 +395,6 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
 
         Button(
             onClick = {
-                vozHelper.hablar("Cerrando sesión")
                 Handler(Looper.getMainLooper()).postDelayed({
                     val intent = Intent(context, MainActivity::class.java)
                     context.startActivity(intent)
@@ -480,54 +423,6 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, userName: String) {
                 color = Color.White
             )
         }
-    }
-
-    if (mostrarDialogoVoz) {
-        AlertDialog(
-            onDismissRequest = { mostrarDialogoVoz = false },
-            title = {
-                Text(
-                    "Texto Reconocido",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            },
-            text = {
-                Column {
-                    Text(
-                        text = "Dijiste:",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = PrimaryBlue.copy(alpha = 0.1f)
-                        )
-                    ) {
-                        Text(
-                            text = textoReconocido,
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = {
-                    mostrarDialogoVoz = false
-                    textoReconocido = ""
-                }) {
-                    Text("Cerrar")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    vozHelper.hablar(textoReconocido)
-                }) {
-                    Text("Repetir")
-                }
-            }
-        )
     }
 
     if (mostrarDialogoGPS) {

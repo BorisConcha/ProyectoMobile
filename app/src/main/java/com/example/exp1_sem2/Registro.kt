@@ -616,7 +616,6 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
             }
         }
 
-        //Boton agregar usuario
         item {
             Button(
                 onClick = {
@@ -639,13 +638,13 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                             mensajeValidacion = "El formato del correo electrónico no es válido"
                             return@Button
                         }
-
-                        if (usuarioViewModel.validarUsuarioPorNombre(nombreUsuario)) {
+                        
+                        if (!usuarioViewModel.validarUsuarioPorNombre(nombreUsuario)) {
                             mensajeValidacion = "El nombre de usuario ya existe"
                             return@Button
                         }
 
-                        if (usuarioViewModel.validarUsuarioPorCorreo(correo)) {
+                        if (!usuarioViewModel.validarUsuarioPorCorreo(correo)) {
                             mensajeValidacion = "El correo electrónico ya está registrado"
                             return@Button
                         }
@@ -664,17 +663,26 @@ fun RegistroView(usuarioViewModel: UsuarioViewModel) {
                             password = password
                         )
 
-                        val usuarioAgregado = usuarioViewModel.agregarUsuario(nuevoUsuario)
-
-                        if (usuarioAgregado) {
-                            Toast.makeText(context, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(context, MainActivity::class.java)
-                            context.startActivity(intent)
-                        } else {
-                            mensajeValidacion = "Error al crear el usuario"
-                        }
-
-                        cargando = false
+                        usuarioViewModel.agregarNewUsuario(
+                            usuario = nuevoUsuario,
+                            onSuccess = { nuevoId ->
+                                cargando = false
+                                Toast.makeText(
+                                    context,
+                                    "Usuario creado correctamente",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val intent = Intent(context, MainActivity::class.java)
+                                context.startActivity(intent)
+                                if (context is Activity) {
+                                    context.finish()
+                                }
+                            },
+                            onError = { error ->
+                                cargando = false
+                                mensajeValidacion = error
+                            }
+                        )
                     } else {
                         mensajeValidacion = "Por favor completa todos los campos requeridos"
                     }

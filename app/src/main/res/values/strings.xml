@@ -4,4 +4,6 @@
     <string name="title_activity_recuperar_password">RecuperarPassword</string>
     <string name="title_activity_accesibilidad">Accesibilidad</string>
     <string name="title_activity_home">Home</string>
+    <string name="title_activity_hablar">Hablar</string>
+    <string name="title_activity_escribir">Escribir</string>
 </resources>

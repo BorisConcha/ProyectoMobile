@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -25,6 +27,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Exp1_Sem2">
+        <activity
+            android:name=".Escribir"
+            android:exported="false"
+            android:label="@string/title_activity_escribir"
+            android:theme="@style/Theme.Exp1_Sem2" />
+        <activity
+            android:name=".Hablar"
+            android:exported="false"
+            android:label="@string/title_activity_hablar"
+            android:theme="@style/Theme.Exp1_Sem2" />
         <activity
             android:name=".Home"
             android:exported="false"
