@@ -95,12 +95,12 @@ class EscribirViewModel(private val nombreUsuario: String = ""): ViewModel(), In
         onError: (String) -> Unit
     ) {
         if (!validarContenido(contenido)) {
-            onError("El contenido no puede estar vacío")
+            onError("El contenido esta vacio")
             return
         }
 
         if (usuarioActual.isEmpty()) {
-            onError("Error: Usuario no identificado")
+            onError("Error: No se reconoce al usuario")
             return
         }
 
@@ -125,17 +125,13 @@ class EscribirViewModel(private val nombreUsuario: String = ""): ViewModel(), In
             "timestamp" to System.currentTimeMillis()
         )
 
-        println("Guardando nota para usuario: $usuarioActual")
-
         db.collection("notes").add(datosNota)
             .addOnSuccessListener { documentReference ->
                 documentReference.update("id", documentReference.id)
-                println("Nota guardada exitosamente con ID: ${documentReference.id}")
                 onSuccess()
             }
             .addOnFailureListener { exception ->
-                println("Error al guardar nota: ${exception.message}")
-                onError(exception.message ?: "Error al guardar la nota")
+                onError(exception.message ?: "Error al guardar la informacion")
             }
     }
 
@@ -146,7 +142,7 @@ class EscribirViewModel(private val nombreUsuario: String = ""): ViewModel(), In
         onError: (String) -> Unit
     ) {
         if (!validarContenido(contenido)) {
-            onError("El contenido no puede estar vacío")
+            onError("El contenido esta vacio")
             return
         }
 
@@ -166,11 +162,9 @@ class EscribirViewModel(private val nombreUsuario: String = ""): ViewModel(), In
 
         db.collection("notes").document(idNota).update(actualizaciones)
             .addOnSuccessListener {
-                println("Nota actualizada exitosamente")
                 onSuccess()
             }
             .addOnFailureListener { exception ->
-                println("Error al actualizar nota: ${exception.message}")
                 onError(exception.message ?: "Error al actualizar la nota")
             }
     }
@@ -182,11 +176,9 @@ class EscribirViewModel(private val nombreUsuario: String = ""): ViewModel(), In
     ) {
         db.collection("notes").document(idNota).delete()
             .addOnSuccessListener {
-                println("Nota eliminada exitosamente")
                 onSuccess()
             }
             .addOnFailureListener { exception ->
-                println("Error al eliminar nota: ${exception.message}")
                 onError(exception.message ?: "Error al eliminar la nota")
             }
     }

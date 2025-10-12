@@ -131,7 +131,7 @@ fun EscribirView(
                 notaAEliminar = null
             },
             title = { Text("Eliminar nota") },
-            text = { Text("¿Estás seguro de que quieres eliminar esta nota?") },
+            text = { Text("¿Estás seguro de querer eliminar esta nota?") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -177,7 +177,7 @@ fun EscribirView(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        vozHelper.detener()
+                        vozHelper.detenerHablar()
                         if (estaEditando) {
                             estaEditando = false
                             idNotaEditando = null
@@ -357,7 +357,7 @@ fun EscribirView(
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
-                            text = "No hay notas todavía",
+                            text = "No existen notas en el sistema",
                             style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                         )
@@ -375,13 +375,13 @@ fun EscribirView(
                             TarjetaNota(
                                 nota = nota,
                                 onEditar = {
-                                    vozHelper.detener()
+                                    vozHelper.detenerHablar()
                                     valorTexto = nota.contenido
                                     estaEditando = true
                                     idNotaEditando = nota.id
                                 },
                                 onEliminar = {
-                                    vozHelper.detener()
+                                    vozHelper.detenerHablar()
                                     notaAEliminar = nota
                                     mostrarDialogoEliminar = true
                                 },
