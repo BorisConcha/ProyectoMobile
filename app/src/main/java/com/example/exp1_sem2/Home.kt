@@ -501,17 +501,71 @@ private fun obtenerUbicacionReal(
     onError: (String) -> Unit
 ) {
     try {
+        val googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance()
+        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
+
+        if (resultCode != com.google.android.gms.common.ConnectionResult.SUCCESS) {
+            onError("Google Play Services no disponible. Por favor actualiza los servicios.")
+            return
+        }
+
+        val locationRequest = com.google.android.gms.location.LocationRequest.Builder(
+            com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY,
+            10000L // 10 segundos
+        ).apply {
+            setMinUpdateIntervalMillis(5000L)
+            setMaxUpdateDelayMillis(15000L)
+        }.build()
+
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
             if (location != null) {
                 onSuccess(location)
             } else {
-                onError("No se pudo obtener la ubicación")
+                val locationCallback = object : com.google.android.gms.location.LocationCallback() {
+                    override fun onLocationResult(locationResult: com.google.android.gms.location.LocationResult) {
+                        locationResult.lastLocation?.let { newLocation ->
+                            onSuccess(newLocation)
+                            fusedLocationClient.removeLocationUpdates(this)
+                        }
+                    }
+                }
+
+                try {
+                    fusedLocationClient.requestLocationUpdates(
+                        locationRequest,
+                        locationCallback,
+                        android.os.Looper.getMainLooper()
+                    )
+
+                    android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                        fusedLocationClient.removeLocationUpdates(locationCallback)
+                        onError("No se pudo obtener la ubicación. Intenta activar el GPS.")
+                    }, 15000)
+
+                } catch (e: SecurityException) {
+                    onError("Error de permisos de ubicación")
+                }
             }
-        }.addOnFailureListener {
-            onError("Error al obtener ubicación")
+        }.addOnFailureListener { exception ->
+            when (exception) {
+                is java.lang.SecurityException -> {
+                    onError("Error: La app no está registrada en Google Cloud Console")
+                }
+                else -> {
+                    onError("Error al obtener ubicación: ${exception.message}")
+                }
+            }
         }
     } catch (e: SecurityException) {
-        onError("Error de permisos")
+        onError("Error de permisos: verifica que los permisos estén concedidos")
+    } catch (e: Exception) {
+        onError("Error inesperado: ${e.message}")
     }
+}
+
+private fun isLocationEnabled(context: android.content.Context): Boolean {
+    val locationManager = context.getSystemService(android.content.Context.LOCATION_SERVICE) as android.location.LocationManager
+    return locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER) ||
+            locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)
 }
 
