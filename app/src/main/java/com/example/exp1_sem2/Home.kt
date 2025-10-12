@@ -47,7 +47,6 @@ import com.example.exp1_sem2.viewmodel.UsuarioViewModel
 import kotlin.getValue
 import com.google.android.gms.location.LocationServices
 import android.Manifest
-import android.speech.RecognizerIntent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.app.Activity
@@ -148,6 +147,33 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, nombre: String, nombreUsuario: 
     }
 
     fun obtenerUbicacion() {
+        val googleApiAvailability = com.google.android.gms.common.GoogleApiAvailability.getInstance()
+        val resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context)
+
+        if (resultCode != com.google.android.gms.common.ConnectionResult.SUCCESS) {
+            mensajeGPS = "Google Play Services no disponible"
+            vozHelper.hablar(mensajeGPS)
+            mostrarDialogoGPS = true
+            return
+        }
+
+        val locationManager = context.getSystemService(android.content.Context.LOCATION_SERVICE) as android.location.LocationManager
+        val isGpsEnabled = locationManager.isProviderEnabled(android.location.LocationManager.GPS_PROVIDER)
+        val isNetworkEnabled = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER)
+
+        if (!isGpsEnabled && !isNetworkEnabled) {
+            mensajeGPS = "Por favor activa el GPS en tu dispositivo"
+            vozHelper.hablar(mensajeGPS)
+            mostrarDialogoGPS = true
+
+            try {
+                val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                context.startActivity(intent)
+            } catch (e: Exception) {
+            }
+            return
+        }
+
         when {
             ContextCompat.checkSelfPermission(
                 context,
@@ -165,6 +191,7 @@ fun HomeView(usuarioViewModel: UsuarioViewModel, nombre: String, nombreUsuario: 
                     onError = { error ->
                         mensajeGPS = error
                         vozHelper.hablar(error)
+                        mostrarDialogoGPS = true
                     }
                 )
             }
